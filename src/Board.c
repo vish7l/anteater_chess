@@ -11,7 +11,6 @@ Board *CreateBoard(void) {
         	printf("Creation of chess board failed\n");
         	return NULL;
     	}
-
 	return newBoard;
        		
 }
@@ -76,7 +75,21 @@ void printBoard(Board *board) {
 }
 
 //returns 1 if piece was moved returns 0 if piece cant move because its illegal
-int MovePiece(Piece p, char start[], char end[], Board* b) {
-	
+void MovePiece(Piece p, char start[], char end[], Board* b) {
+	//as you mentioned previously you said that illegal move check will be done before giving the piece
+	int start_file = start[0] - 'A';
+	int start_rank = start[2] - 1;
+	int end_file = end[0] - 'A';
+	int end_rank = end[2] - 1;
+	if(b->Board[end_rank][end_file]->Piece == NULL)//destination space is null
+	{
+		b->Board[end_rank][end_file]->Piece = p;
+		b->Board[start_rank][start_file]->Piece = NULL;
+	}
+	else
+	{
+		b->Board[end_rank][end_file]->Piece = p;
+		b->Board[start_rank][start_file]->Piece = NULL;
+	}
 }
 
