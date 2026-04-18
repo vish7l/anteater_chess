@@ -62,10 +62,16 @@ typedef struct{
 
 //this space struct represents a single coordinate on the board
 typedef struct{
+	Piece * piece; //pointer to piece
+	Rank rankNum;// row coordinate
+	File fileNum; //column coordinate
+	Color color; // color of square
 
 }Space;
 
 PieceType getPieceType(Piece p);
 Color getPieceColor(Piece p);
+char* getMoveSet(Piece *p);
+Piece storePiece(Piece p);
 
 #endif
