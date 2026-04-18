@@ -38,7 +38,7 @@ void GetBoardWidth(Board *board) {
   +----+----+----+----+----+----+----+----+----+----+
 5 |    |    |    |    |    |    |    |    |    |    |
   +----+----+----+----+----+----+----+----+----+----+
-4 |    |    |    |    | wP|    |    |    |    |    |
+4 |    |    |    |    | wP |    |    |    |    |    |
   +----+----+----+----+----+----+----+----+----+----+
 3 |    |    |    |    |    |    |    |    |    |    |
   +----+----+----+----+----+----+----+----+----+----+
@@ -50,6 +50,12 @@ void GetBoardWidth(Board *board) {
 
  * */
 void printBoard(Board *board) {
+	//intialiaze string
+	char value[6] = "";
+	value[0] = ' ';
+	value[3] = ' ';
+	value[4] = '|';
+	value[5] = '\0';
 	for (int i = 0; i < board -> height; i++) {
 		//the lines are at even indexes
                 if (i %2 == 0) {
@@ -57,21 +63,64 @@ void printBoard(Board *board) {
                 }
 		//treat **board as board[i][j]
                 if (i%2 == 1){
+			printf("|");
 			for (int j = 0; j < board -> width; j ++ ) {
-				Space currenElement = board[i][j];
+				Space *currentElement = board[i][j];
 				//prints empty space if the piece of the space is null
-	                	if ((currentElement -> p) == NULL) {
-					printf("    ");
+	                	if ((currentElement.piece) == NULL) {
+					printf("    |");
 				}
-				else {
+				//pawn for 0, anteater for 1, king for 2, queen for 3, rook for 4, bishop for 5, knight for 6
+				else { 
+					Piece *currentPiece = (board[i][j]) -> piece;
+					//0 for black and 1 for white
+					if ( currentPiece -> color == 0) {
+						value[1] = 'b';
+					}
+					else {
+						value[1] = 'w';
+					}
+
+					//deciding which letter to place in the space to represent a specific chess piece
+					switch(currentPiece -> type) {
+						case 0: //ant(pawn)
+							value[2] = 'P';
+							break;
+						case 1: //anteater
+							value[2] = 'A';
+                                                        break;
+						case 2: //king
+							value[2] = 'K';
+                                                        break;
+						case 3: //queen
+							value[2] = 'Q';
+                                                        break;
+						case 4: //rook
+							value[2] = 'R';
+                                                        break;
+						case 5: //bishop
+							value[2] = 'B';
+                                                        break;
+						case 6: //knight
+							value[2] = 'N';
+                                                        break;
+					}
 					
-				}
-        		}			
+					//prints out the piece if the piece is not null
+					printf("%s",value);
+				}	
+        		}
 
                 }
-		
-		printf("\n");
+
+		printf("\n");	
         }
+}
+
+//possibleMoves();
+//this function
+possibleMoves(Space) {
+	
 }
 
 //returns 1 if piece was moved returns 0 if piece cant move because its illegal
