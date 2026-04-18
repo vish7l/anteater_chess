@@ -19,6 +19,5 @@ void GetBoardHeight(Board *board); //returns height of board
 
 void PrintBoard(Board* board); //prints the board...
 
-int MovePiece(Piece p, char start[], char end[], Board* b);
-//returns 1 if piece was moved returns 0 if piece cant move because its illegal
+void MovePiece(Piece p, char start[], char end[], Board* b);
 #endif
