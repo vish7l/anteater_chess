@@ -60,11 +60,12 @@ void printBoard(Board *board) {
                 if (i%2 == 1){
 			for (int j = 0; j < board -> width; j ++ ) {
 				Space currenElement = board[i][j];
-	                	if ((currentElement.Space).Piece == NULL) {
+				//prints empty space if the piece of the space is null
+	                	if ((currentElement -> p) == NULL) {
 					printf("    ");
 				}
 				else {
-				
+					
 				}
         		}			
 
