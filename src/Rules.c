@@ -12,7 +12,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
         int end_file = end[0] - 'A';
         int end_rank = 7 - (end[1] - '1');
 
-	int start, end;
+	int min, max;
 	
 		//check for clear horiontal path
 	 	if (abs(end_rank - start_rank) == 0) {
@@ -20,16 +20,16 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 
 				//set the start and end values to iterate across the horizontal or vertical path
 				if ( end_file > start_file) {
-					start = start_file;
-					end = end_file;
+					min = start_file;
+					max = end_file;
 				}
 				else {
-					start = end_file;
-					end = start_file;
+					min = end_file;
+					max = start_file;
 				}
 
 				// use a for loop to iterate across the horizontal path and starts on the square ahead of it's current square
-                                for (int i = start; i < end; i ++) {
+                                for (int i = min + 1; i < max; i ++) {
 					Space currentElement = board[start_rank][i];
 					if (currentElement.piece != NULL) {
 						return 0; // no clear path since there is a piece in the way and it is not null
@@ -48,16 +48,16 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 
 				//set the start and end values to iterate across the horizontal or vertical path
                                 if ( end_rank > start_rank) {
-                                        start = start_rank;
-                                        end = end_rank;
+                                        min = start_rank;
+                                        max = end_rank;
                                 }
                                 else {
-                                        start = end_rank;
-                                        end = start_rank;
+                                        min = end_rank;
+                                        max = start_rank;
                                 }
 				
 				// use a for loop to iterate across the vertical path and starts on the square ahead of it's current square
-				for (int i = start; i < end; i ++) {
+				for (int i = min + 1; i < max; i ++) {
                                         Space currentElement = board[i][start_file];
                                         if (currentElement.piece != NULL) {
                                                 return 0; // no clear path since there is a piece in the way and it is not null
@@ -77,7 +77,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 }
 
 //will be used for checking if the diagonal path of the queen or bishop is clear
-int checkStraightPathClear(char start[], char end[], Board *board) {
+int checkDiagonalPathClear(char start[], char end[], Board *board) {
 	 // the starting index is at the top left corner of the chess board
         // convert the start and end character arrats to mathematical 2d array coordinates
         int start_file = start[0] - 'A';
@@ -199,35 +199,27 @@ switch (piece.PieceType) {
 		//if the path is horizontal, there should be no vertical change
 		//if the path is vertical, there should be no horizontal change
 		
-		//check for horizontal path
-		if (abs(end_rank - start_rank) ==0) {
-			if (abs(end_file -start_file) > 0) {
-				checkStraightPathClear(char start[], char end[]);
-				return 1; //valid move	
-			}
-			else {
-				return 0; //invalid move
-			}
-		}
-
-		//check for vertical path
-		else if (abs(end_file - start_file) == 0) {
-			if(abs(end_rank - start_rank) > 0) {
-				return 1; //valid move
-			}
-			else {
-				return 0; //invalid move
-			}
-		}
-		else {
-			return 0; //invalid move
-		}
-		    break;
+		 //call this function directly to check for either a clear horizontal or clear vertical path
+    		return checkStraightPathClear(start, end, b);
+		
 	    }
+		    
     case 3:
 	    //queen
 	    {
-		    break;
+		    //use similar logic for rook if the queen wants to move in a straight path
+		    //have to check for both diagonal and straight paths
+		
+		//check for clear straight path
+		 if ( (abs(end_rank - start_rank) == 0) || (abs(end_file - start_file) > 0) ) {
+		 	return checkStraightPathClear(start, end, b);	 
+		 }
+		 //
+		 else {
+			return  checkDiagonalPathClear(start, end, b);
+		 		
+		 } 
+
 	    }
     case 2:
 	    //king
