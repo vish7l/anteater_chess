@@ -1,7 +1,88 @@
 #include "Rules.h"
+#include "Log.h"
 #include <stdlib.h>
 #include <math.h>
+int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
+{
+	int correct_rank;
+	int l_correct_file = start_file - 1;
+	int r_correct_file = start_file + 1;
+	if(GetPieceColor(p) == 1)
+	{
+		correct_rank = start_rank -1;
+		if(correct_rank < 0)
+		{
+			return 0;
+		}
+	}
+	else
+	{
+		correct_rank = start_rank + 1;
+		if(correct_rank > 8)
+		{
+			return 0;
+		}
+	}
+	if(lcorrect_file < 0)
+	{
+		return 0;
+	}
+	if(rcorrect_file > 9)
+	{
+		return 0;
+	}
+	if(getPieceAt(correct_rank, lcorrect_file, b) != NULL)
+	{
+		return 1;
+	}
+	else if(getPieceAt(correct_rank, rcorrect_file, b) != NULL)
+	{
+		return 1;
+	}	
+	else
+	{
+		return 0;
+	}
 
+}
+int CheckEnPassant(int start_rank, Piece p)
+{
+	char lastMove[] = GetLastMove();
+	int lMove_file = LastMove[1] - 'A';
+	int lMove_rank = 7 - (LastMove[2] - '1');
+	int correct_rank;
+	if(getPieceColor(p) == 1)
+	{
+		correct_rank = 4;
+
+	}
+	else
+	{
+		correct_rank = 5;
+	}
+	if(start_rank != correct_rank)
+	{
+		return 0;
+	}
+	if(lastMove[0] != 'p')
+	{
+		return 0;
+	}
+	else
+	{
+		if( lMove_file != (start_file + 1) && lMove_file != (start_file - 1)  )
+		{
+			return 0;
+		}
+		if( lMove_rank != correct_rank)
+		{
+			return 0;
+		}
+		return 1;
+
+	}
+
+}
 int IllegalMoveCheck(Piece p, char start[], char end[], Board* b)
 {
 	// the starting index is at the top left corner of the chess board
@@ -11,6 +92,10 @@ int IllegalMoveCheck(Piece p, char start[], char end[], Board* b)
 	int end_file = end[0] - 'A';
 	int end_rank = 7 - (end[1] - '1');
 
+	if(end_rank >= 8 || end_rank < 0 || start_file < 0 || start_file > 9)
+	{
+		return 0;
+	}
 if(GetPieceColor(b->Board[end_rank][end_file]->Piece) == GetPieceColor(p) )
 		{
 			return 0; //cant go to a space with a piece of same color
@@ -24,17 +109,57 @@ switch (piece.PieceType) {
     case 0: //pawn
 	    //need to fix code because we had wrong initial coordinates
 	    {
+			    if(CheckEnPassant(p, start, end) == 1)
+			    {
+				char lastMove[] = GetLastMove();
+				int lMove_file = LastMove[1] - 'A';
+				int lMove_rank = 7 - (LastMove[2] - '1');
+				if(end_file == lMove_file && end_rank == lMove_rank)
+				{
+					return 1;
+				}
+			    }
+			    if(CheckIfCapture(p,start_rank, start_file, b ) == 1)
+			    {
+				    int correct_rank;
+				    int rcorrect_file = start_file + 1;
+				    int lcorrect_file = start_file - 1;
+				    if(getPieceColor(p) == 1)
+				    {
+					    correct_rank = start_rank -1;
+				    }
+				    else
+				    {
+					    correct_rank = start_rank + 1;
+				    }
+				    if(rcorrect_file > 9)
+				    {
+					    rcorrect_file = -1;
+				    }
+				    if(lcorrect_file < 0)
+				    {
+					    lcorrect_file = -1;
+				    }
+				    if(rcorrect_file != -1)
+				    {
+					    if(end_file == rcorrect_file && end_rank = correct_rank)
+					    {
+						    return 1;
+					    }
+				    }
+				    else
+				    {
+					    if(end_file == lcorrect_file && end_rank = correct_rank)
+					    {
+						    return 1;
+					    }
+				    }
+			    }
+
+
+
 		    if(GetPieceColor(p) == 1)//its black
 		    {
-			    if(CheckEnPassant())
-			    {
-				    //enpassant logic reutrn 1 
-			    }
-			    if(CheckIfCapture())
-			    {
-				    //capture logic for diagonal return 1 
-
-			    }
 			    if(end_rank > start_rank)
 			    {
 				    return 0;
@@ -62,7 +187,30 @@ switch (piece.PieceType) {
 		    }
 		    else//its white
 		    {
-			    //copy black logic for white with tweaks
+
+				 if(end_rank < start_rank)
+			    {
+				    return 0;
+			    }
+			    if(end_file != start_file)
+			    {
+				    return 0;
+			    }
+			    if(start_rank == 2)
+			    {
+				    if( end_rank - start_rank != 2 &&  end_rank - start_rank != 1) 
+				    {
+					    return 0;
+				    }
+			    }
+			    else
+			    {
+				    if(start_rank - end_rank != 1) 
+				    {
+					    return 0;
+				    }
+			    }
+			    return 1;
 		    }
 		    break;
 	    }
