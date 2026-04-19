@@ -74,8 +74,8 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 
 				// use a for loop to iterate across the horizontal path and starts on the square ahead of it's current square
                                 for (int i = min + 1; i < max; i ++) {
-					Space currentElement = board[start_rank][i];
-					if (currentElement.piece != NULL) {
+					Space *currentElement = board[start_rank][i];
+					if (currentElement -> piece != NULL) {
 						return 0; // no clear path since there is a piece in the way and it is not null
 					}						 
 				}
@@ -102,8 +102,8 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 				
 				// use a for loop to iterate across the vertical path and starts on the square ahead of it's current square
 				for (int i = min + 1; i < max; i ++) {
-                                        Space currentElement = board[i][start_file];
-                                        if (currentElement.piece != NULL) {
+                                        Space *currentElement = board[i][start_file];
+                                        if (currentElement -> piece != NULL) {
                                                 return 0; // no clear path since there is a piece in the way and it is not null
                                         }
                                 }
@@ -394,6 +394,54 @@ switch (piece.PieceType) {
     case 1:
 	    //anteater
 	    {
+		    //can either move one space anywhere or or kill pawns adjecent to itself
+		    //if there are no pawns adjacent to the anteater, it can only move one space in any direction
+
+		    Space *currentSpace = b[start_rank][start_file];
+		    //can only move to adjacent spaces only if the spaces are empty or have an ant
+		    //target 1 space up
+		    if ( (end_rank - start_rank  == 1) && (end_file == start_file)) {
+		    	if(currentSpace -> p == NULL) {
+				return 1;
+			}
+			//is valid if the piece is an ant
+			else if ((currentSpace -> p) -> PieceType == 0) {
+				return 1;
+			}
+		    }
+		    //target is 1 space down
+		    else if ((start_rank - end_rank == 1) && (end_file == start_file)) {
+			if(currentSpace -> p == NULL) {
+                                return 1;
+                        }
+                        //is valid if the piece is an ant
+                        else if ((currentSpace -> p) -> PieceType == 0) {
+                                return 1;
+                        }
+		    
+		    }
+		    //target is 1 space left
+		    else if ((start_rank == end_rank) && (end_file - start_file == 1)){
+                        if(currentSpace -> p == NULL) {
+                                return 1;
+                        }
+                        //is valid if the piece is an ant
+                        else if ((currentSpace -> p) -> PieceType == 0) {
+                                return 1;
+                        }
+
+		    }
+		    //target is 1 space right
+		    else if ((start_rank == end_rank) && (start_file - end_file == 1)) {
+                        if(currentSpace -> p == NULL) {
+                                return 1;
+                        }
+                        //is valid if the piece is an ant
+                        else if ((currentSpace -> p) -> PieceType == 0) {
+                                return 1;
+                        }
+		    
+		    }
 		    break;
 	    }
     default:
