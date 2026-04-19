@@ -56,7 +56,7 @@ void printBoard(Board *board) {
 	value[3] = ' ';
 	value[4] = '|';
 	value[5] = '\0';
-	for (int i = 0; i < board -> height; i++) {
+	for (int i = 0; i < board -> height * 2 + 1; i++) {
 		//the lines are at even indexes
                 if (i %2 == 0) {
                         printf(" +----+----+----+----+----+----+----+----+----+----+");
@@ -67,7 +67,7 @@ void printBoard(Board *board) {
 			for (int j = 0; j < board -> width; j ++ ) {
 				Space *currentElement = board[i][j];
 				//prints empty space if the piece of the space is null
-	                	if ((currentElement.piece) == NULL) {
+	                	if ((currentElement -> piece) == NULL) {
 					printf("    |");
 				}
 				//pawn for 0, anteater for 1, king for 2, queen for 3, rook for 4, bishop for 5, knight for 6
@@ -101,7 +101,7 @@ void printBoard(Board *board) {
 						case 5: //bishop
 							value[2] = 'B';
                                                         break;
-						case 6: //knight
+							case 6: //knight
 							value[2] = 'N';
                                                         break;
 					}
