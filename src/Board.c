@@ -25,6 +25,13 @@ Board *CreateBoard(void) {
 
 //deltes the board using malloc()
 void DeleteBoard(Board *board) {
+	for (int i = 0; i < board -> width; i ++) {
+		for (int j = 0; j < board -> height; j++) 
+		{
+			free(board[i][j] -> piece);
+			free(board[i][j]);
+		}
+	}
 	free(board);
 }
 
