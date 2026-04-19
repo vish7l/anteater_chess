@@ -156,4 +156,7 @@ void MovePiece(Piece p, char start[], char end[], Board* b) {
 		b->Board[start_rank][start_file]->Piece = NULL;
 	}
 }
-
+Piece* getPieceAt(int rank, int file, Board* b)
+{
+	return b->board[rank][file]->Piece;
+}

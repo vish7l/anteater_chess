@@ -9,7 +9,7 @@ int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 	int correct_rank;
 	int l_correct_file = start_file - 1;
 	int r_correct_file = start_file + 1;
-	if(GetPieceColor(p) == 1)
+	if(getPieceColor(p) == 1)
 	{
 		correct_rank = start_rank -1;
 		if(correct_rank < 0)
@@ -208,7 +208,7 @@ int IllegalMoveCheck(Piece p, char start[], char end[], Board* b)
 	{
 		return 0;
 	}
-if(GetPieceColor(b->Board[end_rank][end_file]->Piece) == GetPieceColor(p) )
+if(getPieceColor(b->Board[end_rank][end_file]->Piece) == getPieceColor(p) )
 		{
 			return 0; //cant go to a space with a piece of same color
 		}
@@ -270,7 +270,7 @@ switch (piece.PieceType) {
 
 
 
-		    if(GetPieceColor(p) == 1)//its black
+		    if(getPieceColor(p) == 1)//its black
 		    {
 			    if(end_rank > start_rank)
 			    {
@@ -361,7 +361,7 @@ switch (piece.PieceType) {
     case 5:
 	    //bishop
 	    {
-		    
+	    		return checkDiagonalPathClear(start, end, b);	    
 		    break;
 	    }
     case 4:

@@ -11,4 +11,6 @@ void UndoMove(char filename[LENGHT]);
 // Prints game log history
 void PrintLog(char filename[LENGTH]);
 
+char[] getLastMove(void); 
+
 #endif
