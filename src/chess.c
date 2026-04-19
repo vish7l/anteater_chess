@@ -12,26 +12,42 @@ int initPieces(Board *board) {
     	Piece *wp = (Piece *)malloc(sizeof(Piece));
 	wp->color = White;
 	wp->type = backRank[c];
-	wp->moveSet = NULL;
 	board->board[0][c].piece = wp;
 
 	Piece *wpawn = (Piece *)malloc(sizeof(Piece));
 	wpawn->color = White;
 	wpawn->type = Pawn;
-	wpawn->moveSet = NULL;
 	board->board[1][c].piece = wpawn;
 
-	Piece *wpawn = 
+	Piece *bp = (Piece *)mallc(sizeof(Piece));
+	bpawn->color = Black;
+	bpawn->type = Pawn;
+	board->board[6][c].piece = bpawn;
+
+	Piece *bpawn = (Piece *)malloc(sizeof(Piece));
+	bp->color = Black;
+	bp->type = backRank[c];
+	board->board[7][c].piece = bp;
     }
+}
+
+char getPieceChar(Piece *p) {
+    switch (p->type) {
+	case Pawn:	return 'P';
+	case Anteater:  return 'A';
+	case King:	return 'K';
+	case Queen:	return 'Q';
+	case Rook:	return 'R';
+	case Bishop:	return 'B';
+	case Knight:	return 'N';
+	default:	return '?';
+    }	
 }
 
 int main()
 {
-
     int gameType = 0;
     int colorChoice = -1;
-    int Player1;
-    int Player2;
     
     printf("Welcome to Anteater Chess!\n");
 
@@ -64,6 +80,7 @@ int main()
     if (chessBoard == NULL) {
 	return 1;
     }
+
     initPieces(chessBoard);
     PrintBoard(chessBoard);
 
@@ -84,22 +101,20 @@ int main()
 
 	char startPos[3];
 	char endPos[3];
+	bool moveMade = false;
 
 	if (isHuman) {
-	    bool validMove = false;
-	    while (!validmove) {
-		printf("\n%s's turn (move %d). Enter move (e.g. E2 E4): ",
+	    while (!moveMade) {
+		printf("\n%s's turn (move %d). Enter starting position 
+							(e.g. E2): ",
 			currentTurn == 0 ? "White": "Black", moveNumber);
-		scanf("%s %s", startPos, endPos);
+		scanf("%s", startPos);
 
 		/* Bounds checking */
 		int sr = startPos[1] - '1';
 		int sc = startPos[0] - 'A';
-		int er = endPos[1] - '1';
-		int ec = endPos[1] - 'A';
 		
-		if (sr < 0 || sr > 7 || sc < 0 || sc > 9 ||
-                    er < 0 || er > 7 || ec < 0 || ec > 9) {
+		if (sr < 0 || sr > 7 || sc < 0 || sc > 9) {
                     printf("Invalid coordinates. Try again.\n");
                     continue;
                 }
@@ -117,36 +132,97 @@ int main()
 		    continue;
 		}
 
-		/* Use Rules.c legality check */
-		if (IllegalMoveCheck(*selected, starPos, endPos, chessBoard)) {
-		    validMove = true;
-		} else {
-		    printf("Illegal move. Try again.\n");
+		/* Get destination */
+		printf("Enter destination (e.g. D3): ");
+		scanf("%s", endPos);
+	
+		int er = endPos[1] - '1';
+		int ec = endPos[1] - 'A';
+
+		if (er < 0 || er > 7 || ec < 0 || ec > 9) {
+		    printf("Invalid coordinates. Try again.\n");
+	
+		/* Handles all pieces including anteater */
+		if (!IllegalMoveCheck(*selected, starPos, endPos, chessBoard)) {
+		    printf("Illegel move. Try again.\n");
+		    continue;
 		}
+
+		char pieceChar = getPieceChar(selected);
+
+                /* Execute the move */
+                MovePiece(*selected, startPos, endPos, chessBoard);
+                AddMoveToLog(startPos, endPos, pieceChar, moveNumber);
+
+                /*
+                 * If the piece is an anteater and it just ate an ant,
+                 * ask the player if they want to continue eating adjacent ants.
+                 */
+                if (selected->type == Anteater) {
+                    char currentPos[3];
+                    strcpy(currentPos, endPos);
+
+                    while (1) {
+                        PrintBoard(chessBoard);
+
+                        char choice;
+                        printf("Anteater moved to %s. 
+					Continue eating an adjacent ant? (y/n): ",
+                               currentPos);
+                        scanf(" %c", &choice);
+
+                        if (choice != 'y' && choice != 'Y') {
+                            printf("Anteater stops.\n");
+                            break;
+                        }
+
+                        char nextPos[3];
+                        printf("Enter next position to eat (e.g. F5): ");
+                        scanf("%s", nextPos);
+
+                        int nr = nextPos[1] - '1';
+                        int nc = nextPos[0] - 'A';
+
+                        if (nr < 0 || nr > 7 || nc < 0 || nc > 9) {
+                            printf("Invalid coordinates. Try again.\n");
+                            continue;
+                        }
+
+                        /*
+                         * IllegalMoveCheck validates the chain eat:
+                         * - target is adjacent
+                         * - target is an opponent ant
+                         * - eating is along same file or rank
+                         */
+                        if (!IllegalMoveCheck(*selected, currentPos, 
+						nextPos, chessBoard)) {
+                            printf("Cannot eat there. Try again.\n");
+                            continue;
+                        }
+
+                        /* Execute the chain eat */
+                        MovePiece(*selected, currentPos, nextPos, chessBoard);
+                        AddMoveToLog(currentPos, nextPos, 'A', moveNumber);
+
+                        strcpy(currentPos, nextPos);
+                    }
+                }
+
+                moveMade = true;
+
 	    }
 	} else {
 	    printf("Computer is thinking...\n");
 	    /* TODO: CalculateMove(chessBoard, startPos, endPos); */
 	}
 
-	/* Get piece info before moving */
-	int sr = startPos[1] - '1';
-	int sc = startPos[0] - 'A';
-	Piece *movingPiece = chessBoard->board[sr][sc].piece;
-	char pieceChar = getPieceChar(movingPiece);
-
-	/* Execute the move */
-	MovePiece(*movingPiece, startPos, endPos, chessBoard);
-
-	/* Log the move */
-	AddMoveToLog(startPos, endPos, pieceChar, moveNumber);
-
 	/* Display updated board */
 	PrintBoard(chessBoard);
 
 	/* Check game state for the opponent after our move */
 	if (isCheckMate(chessBoard, opponentColor)) {
-	    printf("Checkmate! %s wins!\n", currentTurn == 0 ? "White" : "Black");
+	    printf("Checkmate! %s wins!\n", currentTurn == 0 ? 
+			    "White" : "Black");
 	    gameDone = true;
 	} else if (isDraw(chessBoard, opponentColor)) {
 	    printf("Stalemate! The game is a draw. \n");
