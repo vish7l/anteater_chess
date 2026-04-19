@@ -5,6 +5,25 @@
 #include "logManager.h"
 #include <stdlib.h>
 
+int initPieces(Board *board) {
+    PieceType backRank[10] = {Rook, Knight, Bishop, Anteater, Queen, King,
+    				Anteater, Bishop, Knight, Rook};
+    for (int c = 0; c < 10; c++) {
+    	Piece *wp = (Piece *)malloc(sizeof(Piece));
+	wp->color = White;
+	wp->type = backRank[c];
+	wp->moveSet = NULL;
+	board->board[0][c].piece = wp;
+
+	Piece *wpawn = (Piece *)malloc(sizeof(Piece));
+	wpawn->color = White;
+	wpawn->type = Pawn;
+	wpawn->moveSet = NULL;
+	board->board[1][c].piece = wpawn;
+
+	Piece *wpawn = 
+    }
+}
 
 int main()
 {
@@ -38,7 +57,6 @@ int main()
 	    printf("\nInvalid color. Enter 0 (white) or 1 (black): ");
 	    scanf("%d\n", &colorChoice);
 	}
-
     }
 
     /* Create and initialize board */
