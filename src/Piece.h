@@ -58,7 +58,7 @@ typedef struct{
     //pointer to the function that calculates the legal moves
     char* moveSet;
 
-}Piece;
+} Piece;
 
 //this space struct represents a single coordinate on the board
 typedef struct{

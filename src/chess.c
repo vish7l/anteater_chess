@@ -1,13 +1,17 @@
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 #include "Board.h"
+#include "Piece.h"
+#include "Space.h"
 #include "Rules.h"
 #include "logManager.h"
-#include <stdlib.h>
+#include "AI.h"
 
 int initPieces(Board *board) {
-    PieceType backRank[10] = {Rook, Knight, Bishop, Anteater, Queen, King,
-    				Anteater, Bishop, Knight, Rook};
+    PieceType backRank[10] = {ROOK, KNIGHT, BISHOP, ANTEATER, QUEEN, KING,
+    				ANTEATER, BISHOP, KNIGHT, ROOK};
     for (int c = 0; c < 10; c++) {
     	Piece *wp = (Piece *)malloc(sizeof(Piece));
 	wp->color = White;
@@ -20,26 +24,26 @@ int initPieces(Board *board) {
 	board->board[1][c].piece = wpawn;
 
 	Piece *bp = (Piece *)mallc(sizeof(Piece));
-	bpawn->color = Black;
-	bpawn->type = Pawn;
+	bp->color = Black;
+	bp->type = Pawn;
 	board->board[6][c].piece = bpawn;
 
 	Piece *bpawn = (Piece *)malloc(sizeof(Piece));
-	bp->color = Black;
-	bp->type = backRank[c];
+	bpawn->color = Black;
+	bpawn->type = backRank[c];
 	board->board[7][c].piece = bp;
     }
 }
 
 char getPieceChar(Piece *p) {
     switch (p->type) {
-	case Pawn:	return 'P';
-	case Anteater:  return 'A';
-	case King:	return 'K';
-	case Queen:	return 'Q';
-	case Rook:	return 'R';
-	case Bishop:	return 'B';
-	case Knight:	return 'N';
+	case PAWN:	return 'P';
+	case ANTEATER:  return 'A';
+	case KING:	return 'K';
+	case QUEEN:	return 'Q';
+	case ROOK:	return 'R';
+	case BISHOP:	return 'B';
+	case KNIGHT:	return 'N';
 	default:	return '?';
     }	
 }
