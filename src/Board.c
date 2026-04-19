@@ -1,22 +1,18 @@
 #include <stdio.h>
-#include <Board.h>
-#include <Piece.h>
-#include <Space.h>
+#include "Board.h"
+#include "Piece.h"
+#include "Space.h"
 #include <stdlib.h>
 
 Board *CreateBoard(void) {
-	Board *newBoard = (Board*) malloc(sizeof(Board));
+	Board *newBoard = (Board *)malloc(sizeof(Board));
 
 	if (newBoard == NULL) {
         	printf("Creation of chess board failed\n");
         	return NULL;
-    	}
-
-	newBoard->height = 8;
-	newBoard->width = 10;
-
-	for (int r = 0; int r < 8; r++) {
-	    for (int c = 0; int c < 10; r++) {
+	}
+	for (int r = 0; r < 8; r++) {
+	    for (int c = 0; c < 10; r++) {
 		initSpace(&newBoard->board[r][c], r, c);
 	    }
 	}
@@ -35,12 +31,12 @@ void DeleteBoard(Board *board) {
 	free(board);
 }
 
-void GetBoardHeight(Board *board) {
-	return board -> height;	
+int GetBoardHeight(Board *board) {
+	return board->height;	
 }
 
-void GetBoardWidth(Board *board) {
-	return board -> width;
+int GetBoardWidth(Board *board) {
+	return board->width;
 }
 
 /*
@@ -64,7 +60,7 @@ void GetBoardWidth(Board *board) {
     A    B    C    D    E    F    G    H    I    J   
 
  * */
-void printBoard(Board *board) {
+void PrintBoard(Board *board) {
 	//intialiaze string
 	char value[6] = "";
 	value[0] = ' ';

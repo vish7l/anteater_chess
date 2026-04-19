@@ -1,8 +1,8 @@
 #ifndef AI_H
 #define AI_H
 
-#include "board.h"
-#include "piece.h"
+#include "Board.h"
+#include "Piece.h"
 
 /*
 This is the main AI function for the game engine.

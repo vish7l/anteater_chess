@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "piece.h" // the header file
+#include "Piece.h" // the header file
 
 PieceType getPieceType(Piece *p){
 	if(p == NULL){
-		return -1
+		return -1;
 	}
 	return p->type;
 }
@@ -15,14 +15,6 @@ Color getPieceColor(Piece *p){
 		return -1;
 	}
 	return p->color;
-}
-
-//function to return posible moves for a piece
-char* getMoveSet(Piece *p){
-	if(p == NULL){
-		return NULL;
-	}
-	return p->moveSet;
 }
 
 Piece storePiece(Piece piece){

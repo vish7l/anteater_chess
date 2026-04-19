@@ -222,7 +222,30 @@ int checkDiagonalPathClear(char start[], char end[], Board *board) {
 	return 1;
 
 }
->>>>>>> 6567ed21995545e0d0110151434f1ee277ed9ced
+
+//only run or use this functon if the target positon contains an anteater or to check if adjacent positions have anteater for anteating consecutive ants
+int validAnteating(int startX, int startY, Board *board) {
+		
+		//adjacent space is 1 space up
+		if ((board[start_rank - 1][start_file]) -> PieceType == 0) {
+                	return 1;
+                }
+		//adjacent space is 1 space down
+		else if ((board[start_rank + 1][start_file]) -> PieceType == 0) {
+                        return 1;
+                }
+		//adjacent space is 1 space right
+		else if ((board[start_rank][start_file + 1]) -> PieceType == 0) {
+                        return 1;
+                }
+		//adjacent space is 1 space left
+		 else if ((board[start_rank + 1][start_file]) -> PieceType == 0) {
+                        return 1;
+                }
+                else {
+			return 0;
+                }
+}
 
 }
 int CheckEnPassant(int start_rank, Piece p)
@@ -583,7 +606,7 @@ static int FindKing(Board *b, PeiceColor color, int *king_rank, int){
             for (int c = 0; c < BOARD_WIDTH; c++)
             {
                 Piece *p = b->Board[r][c]->piece;
-                if (p != NULL && p->type == KING && p->color == color)
+                if (p != NULL && p->type == KING && getPieceColor(p) == color)
                 {
                     *king_rank = r;
                     *king_file = c;
@@ -595,22 +618,81 @@ static int FindKing(Board *b, PeiceColor color, int *king_rank, int){
        
 }
 
-static void MakeCoord(){
-    coord[0] = 'A' + file;
-    coord[1] = '_';
-    coord[2] = '1' + rank;
-    coord[3] = '\0';
-}
 
 int IsCheck(Board *b, PieceColor color){
     //find location of king
     //make coordinate
-    //has
-    
+    int king_rank, king_file;
+
+    if (!FindKing(b, color, &king_rank, &king_file))
+        return 0;
+
+    char king_coord[3];
+    king_coord[0] = 'A' + king_file;
+    king_coord[1] = '1' + king_rank;
+    king_coord[2] = '\0';
+
+    PieceColor enemyColor = (color == White) ? Black : White;
+
+    for (int r = 0; r < BOARD_HEIGHT; r++) {
+        for (int c = 0; c < BOARD_WIDTH; c++) {
+            Piece *p = b->board[r][c]->piece;
+            if (p == NULL) continue;
+            if (getPieceColor(p) != enemyColor) continue;
+
+            char from[3];
+            from[0] = 'A' + c;
+            from[1] = '1' + r;
+            from[2] = '\0';
+
+            if (IllegalMoveCheck(*p, from, king_coord, b))
+                return 1;
+        }
+    }
+    return 0;
 }
 
 int IsCheckamte(Board *b, PieceColor color){
+    if (!IsCheck(b, color)) return 0;
 
+    for (int r = 0; r < BOARD_HEIGHT; r++) {
+        for (int c = 0; c < BOARD_WIDTH; c++) {
+            Piece *p = b->board[r][c]->piece;
+            if (p == NULL) continue;
+            if (getPieceColor(p) != color) continue;
+
+            char from[3];
+            from[0] = 'A' + c;
+            from[1] = '1' + r;
+            from[2] = '\0';
+
+            for (int tr = 0; tr < BOARD_HEIGHT; tr++) {
+                for (int tc = 0; tc < BOARD_WIDTH; tc++) {
+                    char to[3];
+                    to[0] = 'A' + tc;
+                    to[1] = '1' + tr;
+                    to[2] = '\0';
+
+                    if (!IllegalMoveCheck(*p, from, to, b))
+                        continue;
+
+                    Piece *captured = b->board[tr][tc]->piece;
+                    b->board[tr][tc]->piece = p;
+                    b->board[r][c]->piece = NULL;
+
+                    int stillInCheck = IsCheck(b, color);
+
+                    b->board[r][c]->piece = p;
+                    b->board[tr][tc]->piece = captured;
+
+                    if (!stillInCheck)
+                        return 0;
+                }
+            }
+        }
+    }
+
+    return 1;
 }
 
 int IsDraw(Board *b, PieceColor color){

@@ -16,9 +16,9 @@ Board* CreateBoard(void); //creates the board
 
 void DeleteBoard(Board* board); //deletes the board
 
-void GetBoardWidth(Board *board);//returns width of board
+int GetBoardWidth(Board *board);//returns width of board
 
-void GetBoardHeight(Board *board); //returns height of board
+int GetBoardHeight(Board *board); //returns height of board
 
 void PrintBoard(Board* board); //prints the board...
 

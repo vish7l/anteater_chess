@@ -150,7 +150,4 @@ LogNode *GetLastLogNode(void)
     return tail;
 }
 
-int HasPieceMoved(Piece p, char startPos[3])
-{
 
-}
