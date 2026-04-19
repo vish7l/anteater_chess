@@ -6,7 +6,10 @@
 
 /* the movie structure */
 typedef struct {
-	Space board[8][10];
+	Space *board[8][10];
+	int height;
+	int width;
+
 } Board;
 
 Board* CreateBoard(void); //creates the board
