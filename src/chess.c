@@ -84,6 +84,9 @@ int main()
     initPieces(chessBoard);
     PrintBoard(chessBoard);
 
+    /* Initialize the log */
+    initLogManager();
+
     bool gameDone = false;
     int currentTurn = 0; /* 0=White, 1=Black */
     int moveNumber = 1;
@@ -148,11 +151,12 @@ int main()
 		    continue;
 		}
 
-		char pieceChar = getPieceChar(selected);
+		/* Capture info before moving */
+		Piece *captured = chessBoard->board[er][ec].piece;
 
-                /* Execute the move */
+                /* Execute the move and add to log */
                 MovePiece(*selected, startPos, endPos, chessBoard);
-                AddMoveToLog(startPos, endPos, pieceChar, moveNumber);
+                AddMoveToLog(startPos, endPos, selected, captured);
 
                 /*
                  * If the piece is an anteater and it just ate an ant,
@@ -200,9 +204,12 @@ int main()
                             continue;
                         }
 
+			/* Capture the ant */
+			Piece *eatenAnt = chessBoard[nr][nc].piece;
+
                         /* Execute the chain eat */
                         MovePiece(*selected, currentPos, nextPos, chessBoard);
-                        AddMoveToLog(currentPos, nextPos, 'A', moveNumber);
+                        AddMoveToLog(currentPos, nextPos, selected, eatenAnt);
 
                         strcpy(currentPos, nextPos);
                     }
@@ -213,7 +220,42 @@ int main()
 	    }
 	} else {
 	    printf("Computer is thinking...\n");
-	    /* TODO: CalculateMove(chessBoard, startPos, endPos); */
+	    
+	    char *aiMove = CalculateMove(chessBoard, currentColor);
+
+            if (aiMove == NULL) {
+                /* AI has no legal moves — checkmate or stalemate */
+                printf("Computer has no legal moves.\n");
+                gameDone = true;
+                continue;
+            }
+
+            /*
+             * CalculateMove returns a string like "E2 to E4"
+             * Parse it to extract start and end positions
+             */
+            if (sscanf(aiMove, "%2s to %2s", startPos, endPos) != 2) {
+                printf("Error parsing AI move: %s\n", aiMove);
+                free(aiMove);
+                gameDone = true;
+                continue;
+            }
+
+            int sr = startPos[1] - '1';
+            int sc = startPos[0] - 'A';
+            int er = endPos[1] - '1';
+            int ec = endPos[0] - 'A';
+
+            Piece *aiPiece = chessBoard->board[sr][sc].piece;
+            Piece *captured = chessBoard->board[er][ec].piece;
+
+            printf("Computer moves: %s -> %s\n", startPos, endPos);
+
+            MovePiece(*aiPiece, startPos, endPos, chessBoard);
+            AddMoveToLog(startPos, endPos, aiPiece, captured);
+	    
+	    free(aiMove);
+            moveMade = true;
 	}
 
 	/* Display updated board */
@@ -241,9 +283,11 @@ int main()
     }
 
     /* Save and print the game log */
+    SaveLog("game_log.txt");
     PrintLog("game_log.txt");
 
     /* Clean up */
+    DeleteLog();
     DeleteBoard(chessBoard);
     return 0;
 }
