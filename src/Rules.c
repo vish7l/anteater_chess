@@ -171,10 +171,36 @@ switch (piece.PieceType) {
         break;
 }
 }
+static int FindKing(Board *b, PeiceColor color, int *king_rank, int){
+    for (int r = 0; r < BOARD_HEIGHT; r++)
+        {
+            for (int c = 0; c < BOARD_WIDTH; c++)
+            {
+                Piece *p = b->Board[r][c]->piece;
+                if (p != NULL && p->type == KING && p->color == color)
+                {
+                    *king_rank = r;
+                    *king_file = c;
+                    return 1;
+                }
+            }
+        }
+    return 0;
+       
+}
 
+static void MakeCoord(){
+    coord[0] = 'A' + file;
+    coord[1] = '_';
+    coord[2] = '1' + rank;
+    coord[3] = '\0';
+}
 
 int IsCheck(Board *b, PieceColor color){
-   
+    //find location of king
+    //make coordinate
+    //has
+    
 }
 
 int IsCheckamte(Board *b, PieceColor color){
@@ -184,3 +210,4 @@ int IsCheckamte(Board *b, PieceColor color){
 int IsDraw(Board *b, PieceColor color){
 
 }
+
