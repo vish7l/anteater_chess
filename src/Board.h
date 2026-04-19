@@ -23,4 +23,6 @@ void GetBoardHeight(Board *board); //returns height of board
 void PrintBoard(Board* board); //prints the board...
 
 void MovePiece(Piece p, char start[], char end[], Board* b);
+
+Piece* getPieceAt(int rank, int file, Board* b);
 #endif
