@@ -2,6 +2,7 @@
 #include "Log.h"
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
 <<<<<<< HEAD
 int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 {
@@ -45,8 +46,6 @@ int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 		return 0;
 	}
 =======
-#include <stdbool.h>
-
 //will be used for checking if the straight path of the rook or queen is clear
 int checkStraightPathClear(char start[], char end[], Board *board) {
 	 // the starting index is at the top left corner of the chess board
@@ -128,8 +127,31 @@ int checkDiagonalPathClear(char start[], char end[], Board *board) {
         int start_rank = 7 - (start[1] - '1');
         int end_file = end[0] - 'A';
         int end_rank = 7 - (end[1] - '1');
-
+	int file_direction = (end_file - start_file)/abs(end_file - start_file);
+	int rank_direction = (end_rank - start_rank)/abs(end_rank-start_rank);
 	
+	if(abs(end_rank - start_rank) != abs(end_file-start_file))
+	{
+		return 0;
+	}
+
+	while(start_rank != end_rank || start_file != end_file)
+	{
+	start_rank = start_rank + rank_direction;
+	start_file = start_file + file_direction;
+	if(start_rank < 0  || start_rank > 7 || start_file < 0 || start_file > 9 )
+	{
+		return 0;
+	}
+	else
+	{
+		if(getPieceAt(start_rank, start_file, board) != NULL)
+		{
+			return 0;
+		}
+	}
+	}
+	return 1;
 
 }
 >>>>>>> 6567ed21995545e0d0110151434f1ee277ed9ced
@@ -449,10 +471,36 @@ switch (piece.PieceType) {
         break;
 }
 }
+static int FindKing(Board *b, PeiceColor color, int *king_rank, int){
+    for (int r = 0; r < BOARD_HEIGHT; r++)
+        {
+            for (int c = 0; c < BOARD_WIDTH; c++)
+            {
+                Piece *p = b->Board[r][c]->piece;
+                if (p != NULL && p->type == KING && p->color == color)
+                {
+                    *king_rank = r;
+                    *king_file = c;
+                    return 1;
+                }
+            }
+        }
+    return 0;
+       
+}
 
+static void MakeCoord(){
+    coord[0] = 'A' + file;
+    coord[1] = '_';
+    coord[2] = '1' + rank;
+    coord[3] = '\0';
+}
 
 int IsCheck(Board *b, PieceColor color){
-   
+    //find location of king
+    //make coordinate
+    //has
+    
 }
 
 int IsCheckamte(Board *b, PieceColor color){
@@ -462,3 +510,4 @@ int IsCheckamte(Board *b, PieceColor color){
 int IsDraw(Board *b, PieceColor color){
 
 }
+
