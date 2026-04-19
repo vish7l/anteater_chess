@@ -419,51 +419,62 @@ switch (piece.PieceType) {
 		    //can either move one space anywhere or or kill pawns adjecent to itself
 		    //if there are no pawns adjacent to the anteater, it can only move one space in any direction
 
-		    Space *currentSpace = b[start_rank][start_file];
+		    Space *targetSpace = b[end_rank][end_file];
+		   
+		   //checking adjacent spaces
 		    //can only move to adjacent spaces only if the spaces are empty or have an ant
 		    //target 1 space up
 		    if ( (end_rank - start_rank  == 1) && (end_file == start_file)) {
-		    	if(currentSpace -> p == NULL) {
+		    	if(targetSpace -> p == NULL) {
 				return 1;
 			}
 			//is valid if the piece is an ant
-			else if ((currentSpace -> p) -> PieceType == 0) {
+			else if ((targetSpace -> p) -> PieceType == 0) {
 				return 1;
 			}
 		    }
 		    //target is 1 space down
 		    else if ((start_rank - end_rank == 1) && (end_file == start_file)) {
-			if(currentSpace -> p == NULL) {
+			if(targetSpace -> p == NULL) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((currentSpace -> p) -> PieceType == 0) {
+                        else if ((targetSpace -> p) -> PieceType == 0) {
                                 return 1;
                         }
 		    
 		    }
 		    //target is 1 space left
 		    else if ((start_rank == end_rank) && (end_file - start_file == 1)){
-                        if(currentSpace -> p == NULL) {
+                        if(targetSpace -> p == NULL) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((currentSpace -> p) -> PieceType == 0) {
+                        else if ((targetSpace -> p) -> PieceType == 0) {
                                 return 1;
                         }
 
 		    }
 		    //target is 1 space right
 		    else if ((start_rank == end_rank) && (start_file - end_file == 1)) {
-                        if(currentSpace -> p == NULL) {
+                        if(targetSpace -> p == NULL) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((currentSpace -> p) -> PieceType == 0) {
+                        else if ((targetSpace -> p) -> PieceType == 0) {
                                 return 1;
                         }
 		    
 		    }
+		    //now consider another case where the target space is not adjacent and instead is occupied by an ant(pawn)
+		    else if ((targetSpace -> p) -> PieceType == 0 ) {
+		    	if () {
+			
+			}
+			else if 
+		    }
+		    else {return 0;}
+
 		    break;
 	    }
     default:
