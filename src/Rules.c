@@ -1,6 +1,93 @@
 #include "Rules.h"
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
+
+//will be used for checking if the straight path of the rook or queen is clear
+int checkStraightPathClear(char start[], char end[], Board *board) {
+	 // the starting index is at the top left corner of the chess board
+        // convert the start and end character arrats to mathematical 2d array coordinates
+        int start_file = start[0] - 'A';
+        int start_rank = 7 - (start[1] - '1');
+        int end_file = end[0] - 'A';
+        int end_rank = 7 - (end[1] - '1');
+
+	int start, end;
+	
+		//check for clear horiontal path
+	 	if (abs(end_rank - start_rank) == 0) {
+                        if (abs(end_file - start_file) > 0) {
+
+				//set the start and end values to iterate across the horizontal or vertical path
+				if ( end_file > start_file) {
+					start = start_file;
+					end = end_file;
+				}
+				else {
+					start = end_file;
+					end = start_file;
+				}
+
+				// use a for loop to iterate across the horizontal path and starts on the square ahead of it's current square
+                                for (int i = start; i < end; i ++) {
+					Space currentElement = board[start_rank][i];
+					if (currentElement.piece != NULL) {
+						return 0; // no clear path since there is a piece in the way and it is not null
+					}						 
+				}
+				return 1; //clear path and all the pieces in the straight path are null
+                        }
+                        else {
+                                return 0; //no clear path
+                        }
+                }
+
+                //check for vertical path
+                else if (abs(end_file - start_file) == 0) {
+                        if(abs(end_rank - start_rank) > 0) {
+
+				//set the start and end values to iterate across the horizontal or vertical path
+                                if ( end_rank > start_rank) {
+                                        start = start_rank;
+                                        end = end_rank;
+                                }
+                                else {
+                                        start = end_rank;
+                                        end = start_rank;
+                                }
+				
+				// use a for loop to iterate across the vertical path and starts on the square ahead of it's current square
+				for (int i = start; i < end; i ++) {
+                                        Space currentElement = board[i][start_file];
+                                        if (currentElement.piece != NULL) {
+                                                return 0; // no clear path since there is a piece in the way and it is not null
+                                        }
+                                }
+				return 1; //clear path and all the pieces in the straight path are null
+                                
+                        }
+                        else {
+                                return 0; //no clear path
+                        }
+                }
+		else {
+			return 0;
+		}
+
+}
+
+//will be used for checking if the diagonal path of the queen or bishop is clear
+int checkStraightPathClear(char start[], char end[], Board *board) {
+	 // the starting index is at the top left corner of the chess board
+        // convert the start and end character arrats to mathematical 2d array coordinates
+        int start_file = start[0] - 'A';
+        int start_rank = 7 - (start[1] - '1');
+        int end_file = end[0] - 'A';
+        int end_rank = 7 - (end[1] - '1');
+
+	
+
+}
 
 int IllegalMoveCheck(Piece p, char start[], char end[], Board* b)
 {
@@ -115,7 +202,7 @@ switch (piece.PieceType) {
 		//check for horizontal path
 		if (abs(end_rank - start_rank) ==0) {
 			if (abs(end_file -start_file) > 0) {
-				checkStraightPathClear
+				checkStraightPathClear(char start[], char end[]);
 				return 1; //valid move	
 			}
 			else {
