@@ -4,6 +4,74 @@
 #include <math.h>
 #include <stdbool.h>
 <<<<<<< HEAD
+int CheckCastleConditionII(Piece p, Board* b)
+{
+	if(IsCheck(b, getPieceColor(p)))
+	{
+	reutrn 0;
+	}
+	else
+	{
+
+	}
+}
+//Piece* getPieceAt(int rank, int file, Board* b);
+int CheckCastleConditionI(char control, Piece p, Board* b)
+{
+	int correct_rank;
+	if(getPieceColor(p) == 1)
+	{
+		correct_rank = 7;
+	}
+	else
+	{
+		correct_rank == 0;
+	}
+	if(KingMoved(getPieceColor(p)) == 1)
+	{
+		return 0;
+	}
+	switch(control)
+	{
+		case('j'):
+			{
+				if(RookMoved('j', getPieceColor(p)) == 1)
+				{
+					return 0;
+				}
+				else
+				{
+					//check if the position between them is empty
+					if(getPieceAt(correct_rank, 6, b) != NULL || getPieceAt(correct_rank, 7, b) != NULL ||  getPieceAt(correct_rank, 8, b) != NULL )
+					{
+						return 0;
+					}
+					return 1;
+				}
+				break;
+			}
+		case('a'):
+			{
+				if(RookMoved('a', getPieceColor(p)) == 1)
+				{
+					return 0;
+				}
+				else
+				{
+					//check if the position between them is empty
+					if(getPieceAt(correct_rank, 6, b) != NULL || getPieceAt(correct_rank, 7, b) != NULL ||  getPieceAt(correct_rank, 8, b) != NULL ||    getPieceAt(correct_rank, 9, b) != NULL)
+					{
+						return 0;
+					}
+					return 1;
+				}
+
+				break;
+			}
+	}
+
+}
+
 int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 {
 	int correct_rank;
@@ -398,9 +466,36 @@ switch (piece.PieceType) {
 	    //king
 	    //need to fix code because we had wrong initial coordintaes
 	    {
-		    if(CheckCastle())
+		    int correctCastleRank;
+		    if(getPieceColor(p) == 1)
 		    {
-			   // castlelogic + return 1 if true
+			    correctCastleRank = 7;
+		    }
+		    else
+		    {
+			    correctCastleRank = 0;
+		    }
+		    if(CheckCastleConditionI('a', p, b) == 1)
+		    {
+			    if(CheckCastleConditionII() == 1)
+			    {
+				    if(end_file == start_file -2)
+				    {
+					    return 1;
+				    }
+			    }
+		    }
+		    if(CheckCastleConditionI('j' p,b) == 1)
+		    {
+			    if(CheckCastleConditionII() == 1)
+			    {
+				    if(end_file == start_file + 2)
+				    {
+					    return 1;
+				    }
+
+			    }
+			   
 		    }
 		    if( abs(start_file - end_file) > 1 || abs(start_rank - end_rank) > 1 ) //making sure the square is 1 away 
 		    {

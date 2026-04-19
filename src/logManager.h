@@ -1,7 +1,6 @@
 #ifndef logManager
 #define logManager
 #define LENGTH 80
-
 // Adds most recent move to logs
 void AddMoveToLog();
 
