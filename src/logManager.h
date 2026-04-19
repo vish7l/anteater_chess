@@ -1,15 +1,39 @@
-#ifndef logManager
-#define logManager
+#ifndef LOGMANAGER_H
+#define LOGMANAGER_H
 #define LENGTH 80
+<<<<<<< HEAD
 // Adds most recent move to logs
 void AddMoveToLog();
+=======
 
-// Remove move made from logs
-void UndoMove(char filename[LENGHT]);
+typedef struct Piece Piece;
+>>>>>>> 0db58bafe4beaef2af7fe935acf45abab72100d3
 
-// Prints game log history
-void PrintLog(char filename[LENGTH]);
+typedef struct LogNode{
+	char move[LENGTH];
+	char start[3];
+	char end[3];
+	Piece *movedPiece;
+	Piece *capturedPiece;
+	struct LogNode *prev;
+	struct LogNode *next;
+} LogNode;
 
-char[] getLastMove(void); 
+/* initializing and cleanup*/
+void InitLogManager(void);
+void DeleteLog(void);
 
+/* Add and remove move from doubly linked list*/
+void AddMoveToLog(const char start[], const char end[3], Piece *movedPiece, Piece *capturedPiece);
+void UndoLog(void);
+
+/* output and loop*/
+void PrintLog(const char filename[LENGTH]);
+void SaveLog(const char filename[LENGTH]);
+
+/* accessing last move*/
+const char *GetLastMove(void);
+LogNode *GetLastLogNode(void);
+
+int HasPieceMoved(Piece p, char startPos[3]);
 #endif
