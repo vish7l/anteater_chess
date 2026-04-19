@@ -155,53 +155,28 @@ int checkDiagonalPathClear(char start[], char end[], Board *board) {
 
 }
 
-//only run or use this functon if the target positon contains an anteater or to check if adjacent positions have anteater
+//only run or use this functon if the target positon contains an anteater or to check if adjacent positions have anteater for anteating consecutive ants
 int validAnteating(int startX, int startY, Board *board) {
- 
-		if ( (end_rank - start_rank  == 1) && (end_file == start_file)) {
-                        if(targetSpace -> p == NULL) {
-                                return 1;
-                        }
-                        //is valid if the piece is an ant
-                        else if ((targetSpace -> p) -> PieceType == 0) {
-                                return 1;
-                        }
-                    }
-                    //target is 1 space down
-                    else if ((start_rank - end_rank == 1) && (end_file == start_file)) {
-                        if(targetSpace -> p == NULL) {
-                                return 1;
-                        }
-                        //is valid if the piece is an ant
-                        else if ((targetSpace -> p) -> PieceType == 0) {
-                                return 1;
-                        }
-
-                    }
-                    //target is 1 space left
-                    else if ((start_rank == end_rank) && (end_file - start_file == 1)){
-                        if(targetSpace -> p == NULL) {
-                                return 1;
-                        }
-                        //is valid if the piece is an ant
-                        else if ((targetSpace -> p) -> PieceType == 0) {
-                                return 1;
-                        }
-
-                    }
-                    //target is 1 space right
-                    else if ((start_rank == end_rank) && (start_file - end_file == 1)) {
-                        if(targetSpace -> p == NULL) {
-                                return 1;
-                        }
-                        //is valid if the piece is an ant
-                        else if ((targetSpace -> p) -> PieceType == 0) {
-                                return 1;
-                        }
-
-                    }
- 
-	
+		
+		//adjacent space is 1 space up
+		if ((board[start_rank - 1][start_file]) -> PieceType == 0) {
+                	return 1;
+                }
+		//adjacent space is 1 space down
+		else if ((board[start_rank + 1][start_file]) -> PieceType == 0) {
+                        return 1;
+                }
+		//adjacent space is 1 space right
+		else if ((board[start_rank][start_file + 1]) -> PieceType == 0) {
+                        return 1;
+                }
+		//adjacent space is 1 space left
+		 else if ((board[start_rank + 1][start_file]) -> PieceType == 0) {
+                        return 1;
+                }
+                else {
+			return 0;
+                }
 }
 
 }
