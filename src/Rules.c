@@ -258,3 +258,16 @@ switch (piece.PieceType) {
         break;
 }
 }
+
+
+int IsCheck(Board *b, PieceColor color){
+   
+}
+
+int IsCheckamte(Board *b, PieceColor color){
+
+}
+
+int IsDraw(Board *b, PieceColor color){
+
+}
