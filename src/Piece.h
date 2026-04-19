@@ -12,13 +12,13 @@ typedef enum{
 
 //defines the all 7 of the piecetypes
 typedef enum{
-    King,
-    Queen,
-    Anteater,
-    Bishop,
-    Knight,
-    Rook,
-    Pawn
+    PAWN,
+    ANTEATER,
+    KING,
+    QUEEN,
+    ROOK,
+    BISHOP,
+    KNIGHT
 
 
 }PieceType;

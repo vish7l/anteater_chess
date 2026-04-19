@@ -5,6 +5,10 @@
 #include "Space.h"
 #include "Board.h"
 
+int checkStraightPathClear(char start[], char end[]);
+
+int checkStraightPathClear(char start[], char end[]);
+
 int IllegalMoveCheck(Piece p, char start[], char end[], Board* b);
 int IsCheck(Board *b, PieceColor color);
 int IsCheckamte(Board *b, PieceColor color);
