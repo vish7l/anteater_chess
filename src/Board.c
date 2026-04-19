@@ -11,8 +11,16 @@ Board *CreateBoard(void) {
         	printf("Creation of chess board failed\n");
         	return NULL;
     	}
+
+	newBoard->height = 8;
+	newBoard->width = 10;
+
+	for (int r = 0; int r < 8; r++) {
+	    for (int c = 0; int c < 10; r++) {
+		initSpace(&newBoard->board[r][c], r, c);
+	    }
+	}
 	return newBoard;
-       		
 }
 
 //deltes the board using malloc()
