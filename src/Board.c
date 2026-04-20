@@ -14,8 +14,11 @@ Board *CreateBoard(void) {
         	return NULL;
 	}
 	for (int r = 0; r < 8; r++) {
-	    for (int c = 0; c < 10; r++) {
-		initSpace(&newBoard->board[r][c], r, c);
+	    for (int c = 0; c < 10; c++) {
+		newBoard->board[r][c] = (Space *)malloc(sizeof(Space));
+        	newBoard->board[r][c]->piece = NULL;
+        	newBoard->board[r][c]->rank = r;
+        	newBoard->board[r][c]->file = c;
 	    }
 	}
 	return newBoard;
@@ -23,8 +26,8 @@ Board *CreateBoard(void) {
 
 //deltes the board using malloc()
 void DeleteBoard(Board *board) {
-	for (int i = 0; i < board -> width; i ++) {
-		for (int j = 0; j < board -> height; j++) 
+	for (int i = 0; i < 8; i ++) {
+		for (int j = 0; j < 10; j++) 
 		{
 			free(board[i][j] -> piece);
 			free(board[i][j]);
@@ -78,14 +81,14 @@ void PrintBoard(Board *board) {
                 if (i%2 == 1){
 			printf("|");
 			for (int j = 0; j < board -> width; j ++ ) {
-				Space *currentElement = board[i][j];
+				Space *currentElement = board[i/2][j];
 				//prints empty space if the piece of the space is null
 	                	if ((currentElement -> piece) == NULL) {
 					printf("    |");
 				}
 				//pawn for 0, anteater for 1, king for 2, queen for 3, rook for 4, bishop for 5, knight for 6
 				else { 
-					Piece *currentPiece = (board[i][j]) -> piece;
+					Piece *currentPiece = (board[i/2][j]) -> piece;
 					//0 for black and 1 for white
 					if ( currentPiece -> color == 0) {
 						value[1] = 'b';
