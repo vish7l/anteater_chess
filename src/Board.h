@@ -28,5 +28,5 @@ Piece* getPieceAt(int rank, int file, Board* b);
 
 int SpaceIsAttacked(int rank, int file, Board *b);
 
-char[] MakeCoordinateMove(int rank, int file);
+char* MakeCoordinateMove(int rank, int file);
 #endif
