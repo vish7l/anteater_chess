@@ -1,7 +1,6 @@
 #ifndef SPACE_H
 #define SPACE_H
 
-typedef struct Piece Piece;
 
 typedef enum{
 	WhiteSpace, BlackSpace
