@@ -69,7 +69,7 @@ int CheckCastleConditionII(char a, Piece p, Board* b)
 				}
 			case 'j':
 				{
-	if(isSquareAttacked(correct_rank, 6,correct_color, b) == 1 || isSquareAttacked(correct_rank, 7,correct_color, b) == 1 || isSquareAttacked(correct__rank, 8,correct_color, b) == 1)
+	if(isSquareAttacked(correct_rank, 6,correct_color, b) == 1 || isSquareAttacked(correct_rank, 7,correct_color, b) == 1 || isSquareAttacked(correct_rank, 8,correct_color, b) == 1)
 	{
 		return 0;
 	}
