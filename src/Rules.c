@@ -5,6 +5,13 @@
 #include <math.h>
 #include <stdbool.h>
 
+#ifndef BOARD_HEIGHT
+#define BOARD_HEIGHT 8
+#endif
+#ifndef BOARD_WIDTH
+#define BOARD_WIDTH 10
+#endif
+
 //check if king in check and if the squares between it and king is attacked by a enemy piece
 int isSquareAttacked(int rank, int file, int attackColor, Board* b)
 {
@@ -812,10 +819,8 @@ int IsCheckmate(Board *b, Color color){
 
     return 1;
 }
-
 int IsStalemate(Board *b, Color color)
 {
-    /* Stalemate = not in check AND no legal moves */
     if (IsCheck(b, color)) return 0;
 
     for (int sr = 0; sr < BOARD_HEIGHT; sr++) {
@@ -825,23 +830,25 @@ int IsStalemate(Board *b, Color color)
             if (getPieceColor(p) != color) continue;
 
             char start[3];
-            MakeCoordinateMove(sr, sf, start);
+            start[0] = 'A' + sf;
+            start[1] = '1' + sr;
+            start[2] = '\0';
 
             for (int er = 0; er < BOARD_HEIGHT; er++) {
                 for (int ef = 0; ef < BOARD_WIDTH; ef++) {
                     char end[3];
-                    MakeCoordinateMove(er, ef, end);
+                    end[0] = 'A' + ef;
+                    end[1] = '1' + er;
+                    end[2] = '\0';
 
                     if (!IllegalMoveCheck(*p, start, end, b)) continue;
 
-                    /* Temporarily apply the move */
                     Piece *captured         = b->board[er][ef]->piece;
                     b->board[er][ef]->piece = p;
                     b->board[sr][sf]->piece = NULL;
 
                     int stillInCheck = IsCheck(b, color);
 
-                    /* Always restore the board */
                     b->board[sr][sf]->piece = p;
                     b->board[er][ef]->piece = captured;
 
@@ -852,6 +859,7 @@ int IsStalemate(Board *b, Color color)
     }
     return 1;
 }
+
 
 int IsDraw(Board *b)
 {
