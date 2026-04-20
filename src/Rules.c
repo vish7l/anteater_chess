@@ -10,13 +10,13 @@ int isSquareAttacked(int rank, int file, int attackColor, Board* b)
 {
 	for(int i = 0; i < 8; i++)
 	{
-		for(int i =0; i < 10; i++)
+		for(int j =0; j < 10; j++)
 		{
 			if(getPieceAt(i, j, b) == NULL)
 			{
 				continue;
 			}
-			else if( getPieceColor&(getPieceAt(i,j,b)) != attackColor)
+			else if( getPieceColor(getPieceAt(i,j,b)) != attackColor)
 			{
 				continue;
 			}
@@ -24,7 +24,7 @@ int isSquareAttacked(int rank, int file, int attackColor, Board* b)
 			{
 				char* start = MakeCoordinateMove(i, j);
 				char* end = MakeCoordinateMove(rank,file);
-				if(illegalMoveCheck(getPieceAt(i,j,b), start, end, b) == 0)
+				if(IllegalMoveCheck(getPieceAt(i,j,b), start, end, b) == 0)
 				{
 					free(start);
 					free(end);
@@ -61,7 +61,7 @@ int CheckCastleConditionII(char a, Piece p, Board* b)
 		{
 			case 'a':
 				{
-					if(SpaceIsAttacked(correct_rank, 1,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 2,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 3,correct_color, b)==1 || SpaceIsAttacked(correct_rank, 4,correct_color, b) == 1)
+					if(isSquareAttacked(correct_rank, 1,correct_color, b) == 1 || isSquareAttacked(corrcet_rank, 2,correct_color, b) == 1 || isSquareAttacked(corrcet_rank, 3,correct_color, b)==1 || isSquareAttacked(correct_rank, 4,correct_color, b) == 1)
 					{
 						return 0;
 					}	
@@ -69,7 +69,7 @@ int CheckCastleConditionII(char a, Piece p, Board* b)
 				}
 			case 'j':
 				{
-	if(SpaceIsAttacked(correct_rank, 6,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 7,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 8,correct_color, b) == 1)
+	if(isSquareAttacked(correct_rank, 6,correct_color, b) == 1 || isSquareAttacked(corrcet_rank, 7,correct_color, b) == 1 || isSquareAttacked(corrcet_rank, 8,correct_color, b) == 1)
 	{
 		return 0;
 	}
@@ -167,11 +167,11 @@ int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 	{
 		return 0;
 	}
-	if(getPieceAt(correct_rank, lcorrect_file, b) != NULL && getPieceColor&(getPieceAt(correct_rank, l_correct_file, b) ) != getPieceColor(&p))
+	if(getPieceAt(correct_rank, l_correct_file, b) != NULL && getPieceColor(getPieceAt(correct_rank, l_correct_file, b) ) != getPieceColor(&p))
 	{
 		return 1;
 	}
-	else if(getPieceAt(correct_rank, rcorrect_file, b) != NULL && getPieceColor&(getPieceAt(correct_rank, r_correct_file, b)) != getPieceColor(&p)  )
+	else if(getPieceAt(correct_rank, r_correct_file, b) != NULL && getPieceColor(getPieceAt(correct_rank, r_correct_file, b)) != getPieceColor(&p)  )
 	{
 		return 1;
 	}	
@@ -207,7 +207,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 
 				// use a for loop to iterate across the horizontal path and starts on the square ahead of it's current square
                                 for (int i = min + 1; i < max; i ++) {
-					Space *currentElement = board[start_rank][i];
+					Space *currentElement = &board->board[start_rank][i];
 					if (currentElement -> piece != NULL) {
 						return 0; // no clear path since there is a piece in the way and it is not null
 					}						 
@@ -223,7 +223,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
                 else if (abs(end_file - start_file) == 0) {
                         if(abs(end_rank - start_rank) > 0) {
 
-				//set the start and end values to iterate across the horizontal or vertical path
+				//set the start and end values to iterate acr	oss the horizontal or vertical path
                                 if ( end_rank > start_rank) {
                                         min = start_rank;
                                         max = end_rank;
@@ -235,7 +235,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 				
 				// use a for loop to iterate across the vertical path and starts on the square ahead of it's current square
 				for (int i = min + 1; i < max; i ++) {
-                                        Space *currentElement = board[i][start_file];
+                                        Space *currentElement = &board->board[i][start_file];
                                         if (currentElement -> piece != NULL) {
                                                 return 0; // no clear path since there is a piece in the way and it is not null
                                         }
@@ -368,11 +368,11 @@ int validAnteating(int currentX, int currentY, int endX, int endY, Board *board,
 }
 
 }
-int CheckEnPassant(int start_rank, Piece p)
+int CheckEnPassant(int start_rank,int start_file, Piece p)
 {
 	char* lastMove = GetLastMove();
-	int lMove_file = LastMove[0] - 'A';
-	int lMove_rank = '8' - LastMove[1];
+	int lMove_file = lastMove[0] - 'A';
+	int lMove_rank = '8' - lastMove[1];
 	int correct_rank;
 	if(getPieceColor(&p) == 1)
 	{
@@ -411,45 +411,41 @@ int CheckEnPassant(int start_rank, Piece p)
 int IllegalMoveCheck(Piece p, char start[], char end[], Board* b)
 {
 	//makes sure the piece in the target location is not a piece of the same side
-	if (GetPieceColor(b[end_rank][end_file]->piece) == GetPieceColor(p)) {
-		return 0; 
-	}
-
-	// the starting index is at the top left corner of the chess board
-	// convert the start and end character arrats to mathematical 2d array coordinates
 	int start_file = start[0] - 'A';
-	int start_rank = 7 - (start[1] - '1');
+	int start_rank = '8' - start[1];
 	int end_file = end[0] - 'A';
-	int end_rank = 7 - (end[1] - '1');
+	int end_rank = '8' - end[1];
 
 	if(end_rank >= 8 || end_rank < 0 || start_file < 0 || start_file > 9)
 	{
 		return 0;
 	}
-if(getPieceColor&(b->Board[end_rank][end_file]->Piece) == getPieceColor(&p) )
-		{
-			return 0; //cant go to a space with a piece of same color
-		}
-if(start_file == end_file && start_rank == end_rank) //piece cant move to itself
-{
-	return 0;
-}
+
+	if(start_file == end_file && start_rank == end_rank) //piece cant move to itself
+	{
+		return 0;
+	}
+
+	if(b->board[end_rank][end_file]->piece != NULL && getPieceColor(b->board[end_rank][end_file]->piece) == getPieceColor(&p))
+	{
+		return 0;
+	}
 //0 for pawn, 1 for anteater, 2 for king, 3 for queen, 4 for rook, 5 for bishop, 6 for knight
-switch (piece.PieceType) {
+switch (p.type) {
     case 0: //pawn
 	    //need to fix code because we had wrong initial coordinates
 	    {
-			    if(CheckEnPassant(p, start, end) == 1)
+			    if(CheckEnPassant(start_rank, start_file, p) == 1)
 			    {
-				char lastMove[] = GetLastMove();
-				int lMove_file = LastMove[1] - 'A';
-				int lMove_rank = 7 - (LastMove[2] - '1');
+				char* lastMove = GetLastMove();
+				int lMove_file = lastMove[0] - 'A';
+				int lMove_rank = '8' - lastMove[1];
 				if(end_file == lMove_file && end_rank == lMove_rank)
 				{
 					return 1;
 				}
 			    }
-			    if(CheckIfCapture(p,start_rank, start_file, b ) == 1)
+			    if(checkifCapture(p,start_rank, start_file, b ) == 1)
 			    {
 				    int correct_rank;
 				    int rcorrect_file = start_file + 1;
@@ -472,14 +468,14 @@ switch (piece.PieceType) {
 				    }
 				    if(rcorrect_file != -1)
 				    {
-					    if(end_file == rcorrect_file && end_rank = correct_rank)
+					    if(end_file == rcorrect_file && end_rank == correct_rank)
 					    {
 						    return 1;
 					    }
 				    }
-				    else
+				    if(lcorrect_file != -1)
 				    {
-					    if(end_file == lcorrect_file && end_rank = correct_rank)
+					    if(end_file == lcorrect_file && end_rank == correct_rank)
 					    {
 						    return 1;
 					    }
@@ -498,7 +494,7 @@ switch (piece.PieceType) {
 			    {
 				    return 0;
 			    }
-			    if(start_rank == 7)
+			    if(start_rank == 1)
 			    {
 				    if(start_rank - end_rank != 2 && start_rank - end_rank != 1) 
 				    {
@@ -526,7 +522,7 @@ switch (piece.PieceType) {
 			    {
 				    return 0;
 			    }
-			    if(start_rank == 2)
+			    if(start_rank == 6)
 			    {
 				    if( end_rank - start_rank != 2 &&  end_rank - start_rank != 1) 
 				    {
@@ -535,7 +531,7 @@ switch (piece.PieceType) {
 			    }
 			    else
 			    {
-				    if(start_rank - end_rank != 1) 
+				    if(end_rank - start_rank != 1) 
 				    {
 					    return 0;
 				    }
@@ -616,47 +612,29 @@ switch (piece.PieceType) {
 	    //king
 	    //need to fix code because we had wrong initial coordintaes
 	    {
-		    int correctCastleRank;
-		    if(getPieceColor(&p) == 1)
-		    {
-			    correctCastleRank = 7;
-		    }
-		    else
-		    {
-			    correctCastleRank = 0;
-		    }
-		    if(CheckCastleConditionI('a', p, b) == 1)
-		    {
-			    if(CheckCastleConditionII('a', p, b) == 1)
-			    {
-				    if(end_file == start_file -2)
-				    {
-					    return 1;
-				    }
-			    }
-		    }
-		    if(CheckCastleConditionI('j' p,b) == 1)
-		    {
-			    if(CheckCastleConditionII('j', p, b) == 1)
-			    {
-				    if(end_file == start_file + 2)
-				    {
-					    return 1;
-				    }
-
-			    }
-			   
-		    }
-		    if( abs(start_file - end_file) > 1 || abs(start_rank - end_rank) > 1 ) //making sure the square is 1 away 
-		    {
-			    return 0;
-		    }
-		    if(SpaceIsAttacked(end_rank, end_file) == 1)
-		    {
-			    return 0;
-		    }
-		    return 1;
-		    break;
+		   if(CheckCastleConditionI('a', p, b) == 1)
+            {
+                if(CheckCastleConditionII('a', p, b) == 1)
+                {
+                    if(end_file == start_file - 2)
+                        return 1;
+                }
+            }
+            if(CheckCastleConditionI('j', p, b) == 1)  
+            {
+                if(CheckCastleConditionII('j', p, b) == 1)
+                {
+                    if(end_file == start_file + 2)
+                        return 1;
+                }
+            }
+            if(abs(start_file - end_file) > 1 || abs(start_rank - end_rank) > 1)
+                return 0;
+            if(isSquareAttacked(end_rank, end_file, getPieceColor(&p) == 1 ? 0 : 1, b) == 1) 
+                return 0;
+            return 1;
+            break;
+        }
 	    }
     case 1:
 	    //anteater
