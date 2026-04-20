@@ -1,0 +1,36 @@
+Authors: Vishal Sinha, Ayush Chanda, Sahil Kulkarni, Oliver Engles, Brandon Hernandez, Shreshth Sharma, Rick Sharma
+
+Version: Alpha
+
+Date: April 20, 2026
+
+General Instructions: 
+	
+	How to play: 
+		1. The game is played on a 10x8 board (files A-J, ranks 1-8)
+		
+		2. Enter moves in the format: "A2 A3" (start position, then the end position)
+		The start position has the file position, while the end position has the rank position
+			
+		3. The player with the white pieces move first, then the player with the black player goes. The order is alternate.
+		
+		4. Pieces are displayed as: wR (white rook), bP (black pawn), etc. The initial letter is lowercase and describes the color side the piece is in.
+		The second letter is the uppercase letter and describes the piece of each side.
+
+		5. The game ends when a king is in checkmate. The player doing the checkmate wins the game
+	
+	Pieces:
+		- P = Pawn/Ant, R = Rook, N = Knight, B = Bishop
+		- Q = Queen, K = King, A = Anteater
+		- w = white, b = black
+
+	Special Moves:
+		- Anteating: Anteater can chain eat adjacent enemy pawns in one move. 
+		- Pawn Promotion: Pawns can move 2 squares from starting position
+		- Castling and en passant are explained in the user manual and are supported in our alpha version
+	
+	Quit: The user can quit the game anytime.
+
+	Install: Refer to INSTALL for installing instructions
+
+		

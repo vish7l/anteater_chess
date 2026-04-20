@@ -18,28 +18,24 @@ void initPieces(Board *board) {
         Piece *wp = (Piece *)malloc(sizeof(Piece));
         wp->color = White;
         wp->type = backRank[c];
-        wp->moveSet = NULL;
         board->board[0][c]->piece = wp;
 
         /* White pawns (row 1) */
         Piece *wpawn = (Piece *)malloc(sizeof(Piece));
         wpawn->color = White;
         wpawn->type = PAWN;
-        wpawn->moveSet = NULL;
         board->board[1][c]->piece = wpawn;
 
         /* Black pawns (row 6) */
         Piece *bpawn = (Piece *)malloc(sizeof(Piece));
         bpawn->color = Black;
         bpawn->type = PAWN;
-        bpawn->moveSet = NULL;
         board->board[6][c]->piece = bpawn;
 
         /* Black back rank (row 7) */
         Piece *bp = (Piece *)malloc(sizeof(Piece));
         bp->color = Black;
         bp->type = backRank[c];
-        bp->moveSet = NULL;
         board->board[7][c]->piece = bp;
     }
 }
@@ -55,6 +51,7 @@ char getPieceChar(Piece *p) {
         case KNIGHT:   return 'N';
         default:       return '?';
     }
+    return '?';
 }
 
 int main()
@@ -265,11 +262,14 @@ int main()
         PrintBoard(chessBoard);
 
         /* Check game state for the opponent after our move */
-        if (IsCheckamte(chessBoard, opponentColor)) {
+        if (IsCheckmate(chessBoard, opponentColor)) {
             printf("Checkmate! %s wins!\n",
                    currentTurn == 0 ? "White" : "Black");
             gameDone = true;
-        } else if (IsDraw(chessBoard, opponentColor)) {
+        } else if (IsDraw(chessBoard)) {
+            printf("Draw! The game is a draw.\n");
+            gameDone = true;
+        } else if (IsStalemate(chessBoard, opponentColor)) {
             printf("Stalemate! The game is a draw.\n");
             gameDone = true;
         } else if (IsCheck(chessBoard, opponentColor)) {

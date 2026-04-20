@@ -1,6 +1,7 @@
 #ifndef SPACE_H
 #define SPACE_H
 
+#include "Piece.h"
 
 typedef enum{
 	WhiteSpace, BlackSpace

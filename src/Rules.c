@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdbool.h>
-#include "Piece.h"
 
 //check if king in check and if the squares between it and king is attacked by a enemy piece
 int isSquareAttacked(int rank, int file, int attackColor, Board* b)
@@ -741,7 +740,7 @@ switch (piece.PieceType) {
         break;
 }
 }
-static int FindKing(Board *b, PeiceColor color, int *king_rank, int){
+static int FindKing(Board *b, Color color, int *king_rank, int){
     for (int r = 0; r < BOARD_HEIGHT; r++)
         {
             for (int c = 0; c < BOARD_WIDTH; c++)
@@ -760,7 +759,7 @@ static int FindKing(Board *b, PeiceColor color, int *king_rank, int){
 }
 
 
-int IsCheck(Board *b, PieceColor color){
+int IsCheck(Board *b, Color color){
     //find location of king
     //make coordinate
     int king_rank, king_file;
@@ -793,7 +792,7 @@ int IsCheck(Board *b, PieceColor color){
     return 0;
 }
 
-int IsCheckamte(Board *b, PieceColor color){
+int IsCheckmate(Board *b, Color color){
     if (!IsCheck(b, color)) return 0;
 
     for (int r = 0; r < BOARD_HEIGHT; r++) {

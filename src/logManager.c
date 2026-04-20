@@ -151,12 +151,11 @@ LogNode *GetLastLogNode(void)
 }
 
 int KingMoved(int color) {
-    LogNode *head;//need to know how to access head?
     
     LogNode *current = head;
     while (current != NULL)
     {
-	    if (current->movedPiece != NULL && current->start[0] == 'k' && current->movedPiece->color == color)
+	    if (current->movedPiece != NULL && current->movedPiece->type == KING && current->movedPiece->color == color)
 	    {
 		    return 1;
 	    }
@@ -167,12 +166,11 @@ int KingMoved(int color) {
 
 int RookMoved(char file, int color) 
 {
-       	LogNode *head; //need to know ow to access head
-       	LogNode *current = head;
+    LogNode *current = head;
 	while (current != NULL)
        	{
-		if (current->movedPiece != NULL && current->start[0] == 'r' && current->start[1] == file && current->movedPiece->color == color)
-	       	{
+		if (current->movedPiece != NULL && current->movedPiece->type == ROOK && current->start[0] == file && current->movedPiece->color == color)
+	    {
 			return 1;
 		}
 		current = current->next;
