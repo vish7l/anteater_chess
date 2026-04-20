@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "Board.h"
 #include "Piece.h"
 #include "Space.h"
+#include "Board.h"
 #include "Rules.h"
 #include "logManager.h"
 #include "AI.h"

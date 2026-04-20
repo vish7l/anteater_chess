@@ -1,13 +1,8 @@
 #ifndef LOGMANAGER_H
 #define LOGMANAGER_H
 #define LENGTH 80
-<<<<<<< HEAD
-// Adds most recent move to logs
-void AddMoveToLog();
-=======
 
 typedef struct Piece Piece;
->>>>>>> 0db58bafe4beaef2af7fe935acf45abab72100d3
 
 typedef struct LogNode{
 	char move[LENGTH];

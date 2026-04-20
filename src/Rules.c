@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdbool.h>
-<<<<<<< HEAD
+
+
 //check if king in check and if the squares between it and king is attacked by a enemy piece
 int isSquareAttacked(int rank, int file, int attackColor, Board* b)
 {
@@ -131,6 +132,7 @@ int CheckCastleConditionI(char control, Piece p, Board* b)
 	}
 
 }
+>>>>>>> da670dd241ca62abe43730ac9cecab0139dbd4b0
 
 int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 {
@@ -173,7 +175,7 @@ int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 	{
 		return 0;
 	}
-=======
+
 //will be used for checking if the straight path of the rook or queen is clear
 int checkStraightPathClear(char start[], char end[], Board *board) {
 	 // the starting index is at the top left corner of the chess board
@@ -283,28 +285,81 @@ int checkDiagonalPathClear(char start[], char end[], Board *board) {
 
 }
 
+//have an array to tracked all the visited positions
+//1 means the recursive function already visited that location
+//0 means the recursive function is yet to go that position
+//x and y correspondt to the indexes of the visited positoons array but also refer to the actual index positions of the game
+int stayedAtPositions[8][10];
+for (int x = 0; x < board-> height ; x++) {
+	for (int y = 0; y < board -> width; y++) {	
+		stayedAtPositions[x][y] = 0;
+       	}
+}
+
 //only run or use this functon if the target positon contains an anteater or to check if adjacent positions have anteater for anteating consecutive ants
-int validAnteating(int startX, int startY, Board *board) {
-		
+//this is a recursive function
+int validAnteating(int currentX, int currentY, int endX, int endY, Board *board, int anteaterColor) {
+	
+	//only checks for valid anteating trails on positions that were not visited yet
+	if (stayedAtPositions[currentX][currentY] == 0) {
+		//because the position will checked, that element will be declared to 1
+		stayedAtPositions[currentX][currentY] = 1;
+
+		//base cases of either reach target location after capturing all pawns or hitting a space where there is no pawn anymore to capture
+		if ((currentX == endX) && (currentY == endY)) {
+			//only returns 1 if it keeps going and reaches base case
+			//this means the valid anteating processing is correct and only returns 1 under this case
+			
+			if (board[currentX][currentY] -> piece -> PieceType == 0) {
+                        	return 1;
+                	}
+			//has reached target location but target location has no pawn, so it is not a valid move
+			else {
+				return 0;
+			}
+		}
+
 		//adjacent space is 1 space up
-		if ((board[start_rank - 1][start_file]) -> PieceType == 0) {
-                	return 1;
+		if (board[currentX-1][currentY]->piece != NULL && (board[currentX - 1][currentY]) -> piece -> PieceType == 0 && currentX - 1 >= 0 &&
+				board[currentX - 1][currentY]->piece->color != anteaterColor) {
+			//decrement the currentX value by 1 to check top space
+                        //check 4 directions of that adjacent piece
+			if (validAnteating(currentX - 1, currentY, endX, endY, board, anteaterColor) == 1) {
+				return 1;
+			}
+
                 }
 		//adjacent space is 1 space down
-		else if ((board[start_rank + 1][start_file]) -> PieceType == 0) {
-                        return 1;
+		if (board[currentX + 1][currentY]->piece != NULL && (board[currentX + 1][currentY]) -> piece -> PieceType == 0 && currentX + 1 < 8 &&
+				board[currentX + 1][currentY]->piece->color != anteaterColor) {
+                        //increment the currentX by 1 to check bottom square
+			//check 4 directions of that adjacent piece
+                        if (validAnteating(currentX + 1, currentY, endX, endY, board, anteaterColor) == 1) {
+                                return 1;
+                        }
+
                 }
+
 		//adjacent space is 1 space right
-		else if ((board[start_rank][start_file + 1]) -> PieceType == 0) {
-                        return 1;
+		if (board[currentX][currentY + 1]->piece != NULL && (board[currentX][currentY + 1]) -> piece -> PieceType == 0 && currentY + 1 < 10 && 
+				board[currentX][currentY + 1]->piece->color != anteaterColor) {
+                        //increment currentY to check right space
+                        //check 4 directions of that adjacent piece
+                        if (validAnteating(currentX, currentY + 1, endX, endY, board, anteaterColor) == 1) {
+                                return 1;
+                        }
                 }
 		//adjacent space is 1 space left
-		 else if ((board[start_rank + 1][start_file]) -> PieceType == 0) {
-                        return 1;
+		if (board[currentX][currentY - 1]->piece != NULL && (board[currentX][currentY - 1]) -> piece -> PieceType == 0 && currentY - 1 >= 0 && 
+				board[currentX][currentY - 1]->piece->color != anteaterColor) {
+                        //decrement currentY by 1 to check left space
+                        //check 4 directions of that adjacent piece
+			if (validAnteating(currentX, currentY - 1, endX, endY, board, anteaterColor) == 1) {
+                                return 1;
+                        }               
                 }
-                else {
-			return 0;
-                }
+	} 
+		return 0;
 }
 
 }
@@ -346,8 +401,15 @@ int CheckEnPassant(int start_rank, Piece p)
 	}
 
 }
+
+
 int IllegalMoveCheck(Piece p, char start[], char end[], Board* b)
 {
+	//makes sure the piece in the target location is not a piece of the same side
+	if (GetPieceColor(b[end_rank][end_file]->piece) == GetPieceColor(p)) {
+		return 0; 
+	}
+
 	// the starting index is at the top left corner of the chess board
 	// convert the start and end character arrats to mathematical 2d array coordinates
 	int start_file = start[0] - 'A';
@@ -598,58 +660,66 @@ switch (piece.PieceType) {
 		    //if there are no pawns adjacent to the anteater, it can only move one space in any direction
 
 		    Space *targetSpace = b[end_rank][end_file];
+		    int targetColor = targetSpace -> piece -> color;
 		   
 		   //checking adjacent spaces
 		    //can only move to adjacent spaces only if the spaces are empty or have an ant
-		    //target 1 space up
+		    //target 1 space down
 		    if ( (end_rank - start_rank  == 1) && (end_file == start_file)) {
-		    	if(targetSpace -> p == NULL) {
+		    	if(targetSpace -> piece == NULL) {
 				return 1;
 			}
 			//is valid if the piece is an ant
-			else if ((targetSpace -> p) -> PieceType == 0) {
+			else if ((targetSpace -> piece) -> PieceType == 0) {
 				return 1;
 			}
 		    }
-		    //target is 1 space down
+		    //target is 1 space up
 		    else if ((start_rank - end_rank == 1) && (end_file == start_file)) {
-			if(targetSpace -> p == NULL) {
+			if(targetSpace -> piece == NULL) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((targetSpace -> p) -> PieceType == 0) {
+                        else if ((targetSpace -> piece) -> PieceType == 0) {
                                 return 1;
                         }
 		    
 		    }
-		    //target is 1 space left
+		    //target is 1 space right
 		    else if ((start_rank == end_rank) && (end_file - start_file == 1)){
-                        if(targetSpace -> p == NULL) {
+                        if(targetSpace -> piece == NULL) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((targetSpace -> p) -> PieceType == 0) {
+                        else if ((targetSpace -> piece) -> PieceType == 0) {
                                 return 1;
                         }
 
 		    }
-		    //target is 1 space right
+		    //target is 1 space left
 		    else if ((start_rank == end_rank) && (start_file - end_file == 1)) {
-                        if(targetSpace -> p == NULL) {
+                        if(targetSpace -> piece == NULL) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((targetSpace -> p) -> PieceType == 0) {
+                        else if ((targetSpace -> piece) -> PieceType == 0) {
                                 return 1;
                         }
 		    
 		    }
 		    //now consider another case where the target space is not adjacent and instead is occupied by an ant(pawn)
-		    else if ((targetSpace -> p) -> PieceType == 0 ) {
-		    	if () {
+		    else if ((targetSpace -> piece) -> PieceType == 0 ) {
+	    	        //will compare the opponent's color to the anteater's color using the variable anteaterColor
+		        int anteaterColor = b[start_rank][start_file] -> piece -> color;
 			
+			for (int x = 0; x < b-> height ; x++) {
+        			for (int y = 0; y < b -> width; y++) {
+                			stayedAtPositions[x][y] = 0;
+             				}
 			}
-			else if 
+
+			return validAnteating(start_rank, start_file, end_rank, end_file, b, anteaterColor);
+
 		    }
 		    else {return 0;}
 

@@ -6,6 +6,8 @@
 
 Board *CreateBoard(void) {
 	Board *newBoard = (Board *)malloc(sizeof(Board));
+	newBoard -> width = 10;
+	newBoard -> height = 8;
 
 	if (newBoard == NULL) {
         	printf("Creation of chess board failed\n");
