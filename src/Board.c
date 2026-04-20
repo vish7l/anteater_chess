@@ -140,20 +140,12 @@ void MovePiece(Piece p, char start[], char end[], Board* b) {
 	int start_rank = '8' - start[1];
 	int end_file = end[0] - 'A';
 	int end_rank = '8' - end[1];
-	if(b->Board[end_rank][end_file]->Piece == NULL)//destination space is null
-	{
-		b->Board[end_rank][end_file]->Piece = &p;
-		b->Board[start_rank][start_file]->Piece = NULL;
-	}
-	else
-	{
-		b->Board[end_rank][end_file]->Piece = &p;
-		b->Board[start_rank][start_file]->Piece = NULL;
-	}
+	b->Board[end_rank][end_file]->Piece = &p;
+	b->Board[start_rank][start_file]->Piece = NULL;
 }
 Piece* getPieceAt(int rank, int file, Board* b)
 {
-	return b->board[rank][file]->Piece;
+	return b->board[rank][file]->piece;
 }
 
 char* MakeCoordinateMove(int rank, int file)
