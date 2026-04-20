@@ -14,6 +14,7 @@ char *CalculateMove(Board *b, Color aiColor){
     char *myCoords[80];
     int count = 0;
 
+    //to put the ai pieces into the array
     for(int r = 0; r < 8; r++){
         for(int f = 0; f < 10; f++){
             // change the array index into chess type string

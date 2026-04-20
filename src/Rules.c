@@ -132,7 +132,7 @@ int CheckCastleConditionI(char control, Piece p, Board* b)
 	}
 
 }
->>>>>>> da670dd241ca62abe43730ac9cecab0139dbd4b0
+
 
 int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 {
@@ -290,8 +290,8 @@ int checkDiagonalPathClear(char start[], char end[], Board *board) {
 //0 means the recursive function is yet to go that position
 //x and y correspondt to the indexes of the visited positoons array but also refer to the actual index positions of the game
 int stayedAtPositions[8][10];
-for (int x = 0; x < board-> height ; x++) {
-	for (int y = 0; y < board -> width; y++) {	
+for (int x = 0; x < 8; x++) {
+	for (int y = 0; y < 10; y++) {	
 		stayedAtPositions[x][y] = 0;
        	}
 }
@@ -660,7 +660,12 @@ switch (piece.PieceType) {
 		    //if there are no pawns adjacent to the anteater, it can only move one space in any direction
 
 		    Space *targetSpace = b[end_rank][end_file];
-		    int targetColor = targetSpace -> piece -> color;
+		    
+		    int targetColor = -1;
+		
+		    if (targetSpace->piece != NULL) {
+    			targetColor = targetSpace->piece->color;
+		    }
 		   
 		   //checking adjacent spaces
 		    //can only move to adjacent spaces only if the spaces are empty or have an ant
@@ -670,7 +675,7 @@ switch (piece.PieceType) {
 				return 1;
 			}
 			//is valid if the piece is an ant
-			else if ((targetSpace -> piece) -> PieceType == 0) {
+			else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color) {
 				return 1;
 			}
 		    }
@@ -680,7 +685,7 @@ switch (piece.PieceType) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((targetSpace -> piece) -> PieceType == 0) {
+                        else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color) {
                                 return 1;
                         }
 		    
@@ -691,7 +696,7 @@ switch (piece.PieceType) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((targetSpace -> piece) -> PieceType == 0) {
+                        else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color) {
                                 return 1;
                         }
 
@@ -702,18 +707,18 @@ switch (piece.PieceType) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((targetSpace -> piece) -> PieceType == 0) {
+                        else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color) {
                                 return 1;
                         }
 		    
 		    }
 		    //now consider another case where the target space is not adjacent and instead is occupied by an ant(pawn)
-		    else if ((targetSpace -> piece) -> PieceType == 0 ) {
+		    else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color ) {
 	    	        //will compare the opponent's color to the anteater's color using the variable anteaterColor
 		        int anteaterColor = b[start_rank][start_file] -> piece -> color;
 			
-			for (int x = 0; x < b-> height ; x++) {
-        			for (int y = 0; y < b -> width; y++) {
+			for (int x = 0; x < 8; x++) {
+        			for (int y = 0; y < 10; y++) {
                 			stayedAtPositions[x][y] = 0;
              				}
 			}
