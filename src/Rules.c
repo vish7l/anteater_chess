@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdbool.h>
-
+#include "Piece.h"
 
 //check if king in check and if the squares between it and king is attacked by a enemy piece
 int isSquareAttacked(int rank, int file, int attackColor, Board* b)
