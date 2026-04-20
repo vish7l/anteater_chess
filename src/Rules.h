@@ -11,6 +11,6 @@ int checkStraightPathClear(char start[], char end[]);
 int IllegalMoveCheck(Piece p, char start[], char end[], Board* b);
 int IsCheck(Board *b, Color color);
 int IsCheckamte(Board *b, Color color);
-int IsDraw(Board *b, Color color);
+int IsDraw(Board *b);
 
 #endif
