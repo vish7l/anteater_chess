@@ -1,6 +1,6 @@
 #creating the variables
 CC = gcc
-DEBUG = -gc
+DEBUG = -g
 CFLAGS = -Wall -std=c11 $(DEBUG)
 LDFLAGS = -lm
 TAR_NAME = AnteaterChess_Source.tar.gz
@@ -18,29 +18,26 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
 #now the individual files
-chess.o: chess.c Board.h AI.h Piece.h Space.h Rules.h logManager.h
-	$(CC) $(CFLAGS) -c chess.c
+chess.o: src/chess.c src/Board.h src/AI.h src/Piece.h src/Space.h src/Rules.h src/logManager.h
+	$(CC) $(CFLAGS) -c src/chess.c
 
-Piece.o: Piece.c Piece.h
-	$(CC) $(CFLAGS) -c Piece.c
+Piece.o: src/Piece.c src/Piece.h
+	$(CC) $(CFLAGS) -c src/Piece.c
 
-AI.o: AI.c AI.h Rules.h Piece.h logManager.h
-	$(CC) $(CFLAGS) -c AI.c
+AI.o: src/AI.c src/AI.h src/Rules.h src/Piece.h src/logManager.h
+	$(CC) $(CFLAGS) -c src/AI.c
 
-Board.o: Board.c Board.h Piece.h Space.h
-	$(CC) $(CFLAGS) -c Board.c
+Board.o: src/Board.c src/Board.h src/Piece.h src/Space.h
+	$(CC) $(CFLAGS) -c src/Board.c
 
-logManager.o: logManager.c logManager.h
-	$(CC) $(CFLAGS) -c logManager.c
+logManager.o: src/logManager.c src/logManager.h
+	$(CC) $(CFLAGS) -c src/logManager.c
 
-Piece.o: Piece.c Piece.h
-	$(CC) $(CFLAGS) -c Piece.c
+Space.o: src/Space.c src/Space.h
+	$(CC) $(CFLAGS) -c src/Space.c
 
-Space.o: Space.c Space.h
-	$(CC) $(CFLAGS) -c Space.c
-
-Rules.o: Rules.c Rules.h logManager.h Board.h
-	$(CC) $(CFLAGS) -c Rules.c
+Rules.o: src/Rules.c src/Rules.h src/logManager.h src/Board.h
+	$(CC) $(CFLAGS) -c src/Rules.c
 
 #if you want to run the game immediately
 test: $(TARGET)
