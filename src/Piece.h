@@ -25,14 +25,14 @@ typedef enum{
 
 //defines the 8 rows
 typedef enum{
-    R1,
-    R2,
-    R3,
-    R4,
-    R5,
-    R6,
-    R7,
-    R8
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
 }Rank;
 
 //defines the 10 columns
