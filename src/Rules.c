@@ -16,7 +16,7 @@ int isSquareAttacked(int rank, int file, int attackColor, Board* b)
 			{
 				continue;
 			}
-			else if( getPieceColor(getPieceAt(i,j,b)) != attackColor)
+			else if( getPieceColor&(getPieceAt(i,j,b)) != attackColor)
 			{
 				continue;
 			}
@@ -39,7 +39,7 @@ int isSquareAttacked(int rank, int file, int attackColor, Board* b)
 }
 int CheckCastleConditionII(char a, Piece p, Board* b)
 {
-	if(IsCheck(b, getPieceColor(p)))
+	if(IsCheck(b, getPieceColor(&p)))
 	{
 	return 0;
 	}
@@ -47,7 +47,7 @@ int CheckCastleConditionII(char a, Piece p, Board* b)
 	{
 		int correct_rank;
 		int correct_color;
-		if(getPieceColor(p) == 1)
+		if(getPieceColor(&p) == 1)
 		{
 			correct_rank = 7;
 			correct_color = 0;
@@ -83,7 +83,7 @@ int CheckCastleConditionII(char a, Piece p, Board* b)
 int CheckCastleConditionI(char control, Piece p, Board* b)
 {
 	int correct_rank;
-	if(getPieceColor(p) == 1)
+	if(getPieceColor(&p) == 1)
 	{
 		correct_rank = 7;
 	}
@@ -91,7 +91,7 @@ int CheckCastleConditionI(char control, Piece p, Board* b)
 	{
 		correct_rank = 0;
 	}
-	if(KingMoved(getPieceColor(p)) == 1)
+	if(KingMoved(getPieceColor(&p)) == 1)
 	{
 		return 0;
 	}
@@ -99,7 +99,7 @@ int CheckCastleConditionI(char control, Piece p, Board* b)
 	{
 		case('j'):
 			{
-				if(RookMoved('j', getPieceColor(p)) == 1)
+				if(RookMoved('j', getPieceColor(&p)) == 1)
 				{
 					return 0;
 				}
@@ -116,7 +116,7 @@ int CheckCastleConditionI(char control, Piece p, Board* b)
 			}
 		case('a'):
 			{
-				if(RookMoved('a', getPieceColor(p)) == 1)
+				if(RookMoved('a', getPieceColor(&p)) == 1)
 				{
 					return 0;
 				}
@@ -143,7 +143,7 @@ int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 	int correct_rank;
 	int l_correct_file = start_file - 1;
 	int r_correct_file = start_file + 1;
-	if(getPieceColor(p) == 1)
+	if(getPieceColor(&p) == 1)
 	{
 		correct_rank = start_rank -1;
 		if(correct_rank < 0)
@@ -167,11 +167,11 @@ int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 	{
 		return 0;
 	}
-	if(getPieceAt(correct_rank, lcorrect_file, b) != NULL && getPieceColor(getPieceAt(correct_rank, l_correct_file, b) ) != getPieceColor(p))
+	if(getPieceAt(correct_rank, lcorrect_file, b) != NULL && getPieceColor&(getPieceAt(correct_rank, l_correct_file, b) ) != getPieceColor(&p))
 	{
 		return 1;
 	}
-	else if(getPieceAt(correct_rank, rcorrect_file, b) != NULL && getPieceColor(getPieceAt(correct_rank, r_correct_file, b)) != getPieceColor(p)  )
+	else if(getPieceAt(correct_rank, rcorrect_file, b) != NULL && getPieceColor&(getPieceAt(correct_rank, r_correct_file, b)) != getPieceColor(&p)  )
 	{
 		return 1;
 	}	
@@ -374,7 +374,7 @@ int CheckEnPassant(int start_rank, Piece p)
 	int lMove_file = LastMove[0] - 'A';
 	int lMove_rank = '8' - LastMove[1];
 	int correct_rank;
-	if(getPieceColor(p) == 1)
+	if(getPieceColor(&p) == 1)
 	{
 		correct_rank = 3;
 
@@ -426,7 +426,7 @@ int IllegalMoveCheck(Piece p, char start[], char end[], Board* b)
 	{
 		return 0;
 	}
-if(getPieceColor(b->Board[end_rank][end_file]->Piece) == getPieceColor(p) )
+if(getPieceColor&(b->Board[end_rank][end_file]->Piece) == getPieceColor(&p) )
 		{
 			return 0; //cant go to a space with a piece of same color
 		}
@@ -454,7 +454,7 @@ switch (piece.PieceType) {
 				    int correct_rank;
 				    int rcorrect_file = start_file + 1;
 				    int lcorrect_file = start_file - 1;
-				    if(getPieceColor(p) == 1)
+				    if(getPieceColor(&p) == 1)
 				    {
 					    correct_rank = start_rank -1;
 				    }
@@ -488,7 +488,7 @@ switch (piece.PieceType) {
 
 
 
-		    if(getPieceColor(p) == 1)//its black
+		    if(getPieceColor(&p) == 1)//its black
 		    {
 			    if(end_rank > start_rank)
 			    {
@@ -617,7 +617,7 @@ switch (piece.PieceType) {
 	    //need to fix code because we had wrong initial coordintaes
 	    {
 		    int correctCastleRank;
-		    if(getPieceColor(p) == 1)
+		    if(getPieceColor(&p) == 1)
 		    {
 			    correctCastleRank = 7;
 		    }
@@ -746,7 +746,7 @@ static int FindKing(Board *b, Color color, int *king_rank, int){
             for (int c = 0; c < BOARD_WIDTH; c++)
             {
                 Piece *p = b->Board[r][c]->piece;
-                if (p != NULL && p->type == KING && getPieceColor(p) == color)
+                if (p != NULL && p->type == KING && getPieceColor(&p) == color)
                 {
                     *king_rank = r;
                     *king_file = c;
@@ -778,7 +778,7 @@ int IsCheck(Board *b, Color color){
         for (int c = 0; c < BOARD_WIDTH; c++) {
             Piece *p = b->board[r][c]->piece;
             if (p == NULL) continue;
-            if (getPieceColor(p) != enemyColor) continue;
+            if (getPieceColor(&p) != enemyColor) continue;
 
             char from[3];
             from[0] = 'A' + c;
@@ -799,7 +799,7 @@ int IsCheckmate(Board *b, Color color){
         for (int c = 0; c < BOARD_WIDTH; c++) {
             Piece *p = b->board[r][c]->piece;
             if (p == NULL) continue;
-            if (getPieceColor(p) != color) continue;
+            if (getPieceColor(&p) != color) continue;
 
             char from[3];
             from[0] = 'A' + c;
@@ -843,7 +843,7 @@ int IsStalemate(Board *b, PieceColor color) {
         for (int c = 0; c < BOARD_WIDTH; c++) {
             Piece *p = b->board[r][c]->piece;
             if (p == NULL) continue;
-            if (getPieceColor(p) != color) continue;
+            if (getPieceColor(&p) != color) continue;
 
             char from[3];
             from[0] = 'A' + c;
@@ -891,7 +891,7 @@ int IsDraw(Board *b) {
             if (p == NULL) continue;
 
             PieceType t = getPieceType(p);
-            Color     col = getPieceColor(p);
+            Color     col = getPieceColor(&p);
 
             if (t == KING) continue;
 
