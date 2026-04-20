@@ -777,7 +777,7 @@ int IsCheckmate(Board *b, Color color){
         for (int c = 0; c < 10; c++) {
             Piece *p = b->board[r][c]->piece;
             if (p == NULL) continue;
-            if (getPieceColor(&p) != color) continue;
+            if (getPieceColor(p) != color) continue;
 
             char from[3];
             from[0] = 'A' + c;
