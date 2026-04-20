@@ -31,7 +31,7 @@ int isSquareAttacked(int rank, int file, int attackColor, Board* b)
 			{
 				char* start = MakeCoordinateMove(i, j);
 				char* end = MakeCoordinateMove(rank,file);
-				if(IllegalMoveCheck(getPieceAt(i,j,b), start, end, b) == 0)
+				if(IllegalMoveCheck(*getPieceAt(i,j,b), start, end, b) == 0)
 				{
 					free(start);
 					free(end);
@@ -68,7 +68,7 @@ int CheckCastleConditionII(char a, Piece p, Board* b)
 		{
 			case 'a':
 				{
-					if(isSquareAttacked(correct_rank, 1,correct_color, b) == 1 || isSquareAttacked(corrcet_rank, 2,correct_color, b) == 1 || isSquareAttacked(corrcet_rank, 3,correct_color, b)==1 || isSquareAttacked(correct_rank, 4,correct_color, b) == 1)
+					if(isSquareAttacked(correct_rank, 1,correct_color, b) == 1 || isSquareAttacked(correct_rank, 2,correct_color, b) == 1 || isSquareAttacked(correct_rank, 3,correct_color, b)==1 || isSquareAttacked(correct_rank, 4,correct_color, b) == 1)
 					{
 						return 0;
 					}	
@@ -76,7 +76,7 @@ int CheckCastleConditionII(char a, Piece p, Board* b)
 				}
 			case 'j':
 				{
-	if(isSquareAttacked(correct_rank, 6,correct_color, b) == 1 || isSquareAttacked(corrcet_rank, 7,correct_color, b) == 1 || isSquareAttacked(corrcet_rank, 8,correct_color, b) == 1)
+	if(isSquareAttacked(correct_rank, 6,correct_color, b) == 1 || isSquareAttacked(correct_rank, 7,correct_color, b) == 1 || isSquareAttacked(correct_rank, 8,correct_color, b) == 1)
 	{
 		return 0;
 	}
@@ -214,7 +214,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 
 				// use a for loop to iterate across the horizontal path and starts on the square ahead of it's current square
                                 for (int i = min + 1; i < max; i ++) {
-					Space *currentElement = &board->board[start_rank][i];
+					Space *currentElement = board->board[start_rank][i];
 					if (currentElement -> piece != NULL) {
 						return 0; // no clear path since there is a piece in the way and it is not null
 					}						 
@@ -242,7 +242,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 				
 				// use a for loop to iterate across the vertical path and starts on the square ahead of it's current square
 				for (int i = min + 1; i < max; i ++) {
-                                        Space *currentElement = &board->board[i][start_file];
+                                        Space *currentElement = board->board[i][start_file];
                                         if (currentElement -> piece != NULL) {
                                                 return 0; // no clear path since there is a piece in the way and it is not null
                                         }
@@ -377,7 +377,7 @@ int validAnteating(int currentX, int currentY, int endX, int endY, Board *board,
 }
 int CheckEnPassant(int start_rank,int start_file, Piece p)
 {
-	char* lastMove = GetLastMove();
+	const char* lastMove = GetLastMove();
 	int lMove_file = lastMove[0] - 'A';
 	int lMove_rank = '8' - lastMove[1];
 	int correct_rank;
@@ -444,7 +444,7 @@ switch (p.type) {
 	    {
 			    if(CheckEnPassant(start_rank, start_file, p) == 1)
 			    {
-				char* lastMove = GetLastMove();
+				const char* lastMove = GetLastMove();
 				int lMove_file = lastMove[0] - 'A';
 				int lMove_rank = '8' - lastMove[1];
 				if(end_file == lMove_file && end_rank == lMove_rank)
@@ -784,7 +784,7 @@ int IsCheckmate(Board *b, Color color){
         for (int c = 0; c < 10; c++) {
             Piece *p = b->board[r][c]->piece;
             if (p == NULL) continue;
-            if (getPieceColor(&p) != color) continue;
+            if (getPieceColor(p) != color) continue;
 
             char from[3];
             from[0] = 'A' + c;
