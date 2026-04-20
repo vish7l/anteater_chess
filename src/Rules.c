@@ -207,7 +207,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 
 				// use a for loop to iterate across the horizontal path and starts on the square ahead of it's current square
                                 for (int i = min + 1; i < max; i ++) {
-					Space *currentElement = board[start_rank][i];
+					Space *currentElement = &board->board[start_rank][i];
 					if (currentElement -> piece != NULL) {
 						return 0; // no clear path since there is a piece in the way and it is not null
 					}						 
@@ -223,7 +223,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
                 else if (abs(end_file - start_file) == 0) {
                         if(abs(end_rank - start_rank) > 0) {
 
-				//set the start and end values to iterate across the horizontal or vertical path
+				//set the start and end values to iterate acr	oss the horizontal or vertical path
                                 if ( end_rank > start_rank) {
                                         min = start_rank;
                                         max = end_rank;
@@ -235,7 +235,7 @@ int checkStraightPathClear(char start[], char end[], Board *board) {
 				
 				// use a for loop to iterate across the vertical path and starts on the square ahead of it's current square
 				for (int i = min + 1; i < max; i ++) {
-                                        Space *currentElement = board[i][start_file];
+                                        Space *currentElement = &board->board[i][start_file];
                                         if (currentElement -> piece != NULL) {
                                                 return 0; // no clear path since there is a piece in the way and it is not null
                                         }
