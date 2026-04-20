@@ -2,7 +2,7 @@
 #define LOGMANAGER_H
 #define LENGTH 80
 
-typedef struct Piece Piece;
+#include "Piece.h"
 
 typedef struct LogNode{
 	char move[LENGTH];
