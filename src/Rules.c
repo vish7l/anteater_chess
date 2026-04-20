@@ -718,13 +718,13 @@ switch (p.type) {
         break;
 }
 }
-static int FindKing(Board *b, Color color, int *king_rank, int){
-    for (int r = 0; r < BOARD_HEIGHT; r++)
+static int FindKing(Board *b, Color color, int *king_rank, int *king_file){
+    for (int r = 0; r < 8; r++)
         {
-            for (int c = 0; c < BOARD_WIDTH; c++)
+            for (int c = 0; c < 10; c++)
             {
-                Piece *p = b->Board[r][c]->piece;
-                if (p != NULL && p->type == KING && getPieceColor(&p) == color)
+                Piece *p = b->board[r][c]->piece;
+                if (p != NULL && p->type == KING && getPieceColor(p) == color)
                 {
                     *king_rank = r;
                     *king_file = c;
@@ -750,10 +750,10 @@ int IsCheck(Board *b, Color color){
     king_coord[1] = '1' + king_rank;
     king_coord[2] = '\0';
 
-    PieceColor enemyColor = (color == White) ? Black : White;
+    Color enemyColor = (color == White) ? Black : White;
 
-    for (int r = 0; r < BOARD_HEIGHT; r++) {
-        for (int c = 0; c < BOARD_WIDTH; c++) {
+    for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 10; c++) {
             Piece *p = b->board[r][c]->piece;
             if (p == NULL) continue;
             if (getPieceColor(&p) != enemyColor) continue;
@@ -773,8 +773,8 @@ int IsCheck(Board *b, Color color){
 int IsCheckmate(Board *b, Color color){
     if (!IsCheck(b, color)) return 0;
 
-    for (int r = 0; r < BOARD_HEIGHT; r++) {
-        for (int c = 0; c < BOARD_WIDTH; c++) {
+    for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 10; c++) {
             Piece *p = b->board[r][c]->piece;
             if (p == NULL) continue;
             if (getPieceColor(&p) != color) continue;
@@ -784,8 +784,8 @@ int IsCheckmate(Board *b, Color color){
             from[1] = '1' + r;
             from[2] = '\0';
 
-            for (int tr = 0; tr < BOARD_HEIGHT; tr++) {
-                for (int tc = 0; tc < BOARD_WIDTH; tc++) {
+            for (int tr = 0; tr < 8; tr++) {
+                for (int tc = 0; tc < 10; tc++) {
                     char to[3];
                     to[0] = 'A' + tc;
                     to[1] = '1' + tr;
