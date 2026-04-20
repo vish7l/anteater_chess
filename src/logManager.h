@@ -36,4 +36,9 @@ const char *GetLastMove(void);
 LogNode *GetLastLogNode(void);
 
 int HasPieceMoved(Piece p, char startPos[3]);
+
+
+int KingMoved(int color);
+
+int RookMoved(char file, int color);
 #endif

@@ -1,10 +1,39 @@
 #include "Rules.h"
-#include "Log.h"
+#include "logManager.h"
+#include "Board.h"
 #include <stdlib.h>
 #include <math.h>
 #include <stdbool.h>
 <<<<<<< HEAD
-int CheckCastleConditionII(Piece p, Board* b)
+//check if king in check and if the squares between it and king is attacked by a enemy piece
+int isSquareAttacked(int rank, int file, int attackColor, Board* b)
+{
+	for(int i = 0; i < 7; i++)
+	{
+		for(int i =0; i < 9; i++)
+		{
+			if(getPieceAt(i, j, b) == NULL)
+			{
+				continue;
+			}
+			else if( getPieceColor(getPieceAt(i,j,b)) != attackColor)
+			{
+				continue;
+			}
+			else
+			{
+				char start[] = MakeCoordinateMove(i, j);
+				char end[] = MakeCoordinateMove(rank,file);
+				if(illegalMoveCheck(getPieceAt(i,j,b), start[], end[], b) == 0)
+				{
+					return 0;
+				}
+			}
+		}
+	}
+	return 1;
+}
+int CheckCastleConditionII(char a, Piece p, Board* b)
 {
 	if(IsCheck(b, getPieceColor(p)))
 	{
@@ -12,10 +41,41 @@ int CheckCastleConditionII(Piece p, Board* b)
 	}
 	else
 	{
-
+		int corrcet_rank;
+		int corrcet_color;
+		if(getPieceColor(p) == 1)
+		{
+			correct_rank = 7;
+			correct_color = 0;
+		}
+		else
+		{
+			correct_rank = 0;
+			correct_color = 1;
+		}
+		switch(a)
+		{
+			case 'a':
+				{
+					if(SpaceIsAttacked(correct_rank, 1,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 2,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 3,correct_color, b) || SpaceIsAttacked(correct_rank, 4,correct_color, b) == 1)
+					{
+						return 0;
+					}	
+					break;
+				}
+			case 'j':
+				{
+	if(SpaceIsAttacked(correct_rank, 6,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 7,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 8,correct_color, b))
+	{
+		return 0;
+	}
+					break;
+				}
+		}
+		return 1;
 	}
 }
-//Piece* getPieceAt(int rank, int file, Board* b);
+//checks if kign not moved rook not moved and space not occupied
 int CheckCastleConditionI(char control, Piece p, Board* b)
 {
 	int correct_rank;
@@ -500,7 +560,7 @@ switch (piece.PieceType) {
 		    }
 		    if(CheckCastleConditionI('a', p, b) == 1)
 		    {
-			    if(CheckCastleConditionII() == 1)
+			    if(CheckCastleConditionII('a', p, b) == 1)
 			    {
 				    if(end_file == start_file -2)
 				    {
@@ -510,7 +570,7 @@ switch (piece.PieceType) {
 		    }
 		    if(CheckCastleConditionI('j' p,b) == 1)
 		    {
-			    if(CheckCastleConditionII() == 1)
+			    if(CheckCastleConditionII('j', p, b) == 1)
 			    {
 				    if(end_file == start_file + 2)
 				    {
@@ -524,7 +584,7 @@ switch (piece.PieceType) {
 		    {
 			    return 0;
 		    }
-		    if()//end coordinate is attacked by a enemy piece return 0
+		    if(SpaceIsAttacked(end_rank, end_file) == 1)
 		    {
 			    return 0;
 		    }
