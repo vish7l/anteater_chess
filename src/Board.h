@@ -25,4 +25,8 @@ void PrintBoard(Board* board); //prints the board...
 void MovePiece(Piece p, char start[], char end[], Board* b);
 
 Piece* getPieceAt(int rank, int file, Board* b);
+
+int SpaceIsAttacked(int rank, int file, Board *b);
+
+char[] MakeCoordinateMove(int rank, int file);
 #endif

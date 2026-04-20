@@ -1,8 +1,13 @@
 #ifndef LOGMANAGER_H
 #define LOGMANAGER_H
 #define LENGTH 80
+<<<<<<< HEAD
+// Adds most recent move to logs
+void AddMoveToLog();
+=======
 
 typedef struct Piece Piece;
+>>>>>>> 0db58bafe4beaef2af7fe935acf45abab72100d3
 
 typedef struct LogNode{
 	char move[LENGTH];
@@ -30,4 +35,10 @@ void SaveLog(const char filename[LENGTH]);
 const char *GetLastMove(void);
 LogNode *GetLastLogNode(void);
 
+int HasPieceMoved(Piece p, char startPos[3]);
+
+
+int KingMoved(int color);
+
+int RookMoved(char file, int color);
 #endif

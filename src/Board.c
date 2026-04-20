@@ -158,3 +158,12 @@ Piece* getPieceAt(int rank, int file, Board* b)
 {
 	return b->board[rank][file]->Piece;
 }
+
+char[] MakeCoordinateMove(int rank, int file)
+{
+	char a[2];
+	char[0]= (char)(rank + 1) ;
+	char[1] = (char)(file + 'A');
+	return a;
+}
+
