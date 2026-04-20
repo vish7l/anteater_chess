@@ -305,7 +305,7 @@ int stayedAtPositions[8][10];
 for (int x = 0; x < 8; x++) {
 	for (int y = 0; y < 10; y++) {	
 		stayedAtPositions[x][y] = 0;
-       	}
+    }
 }
 
 //only run or use this functon if the target positon contains an anteater or to check if adjacent positions have anteater for anteating consecutive ants
@@ -370,11 +370,10 @@ int validAnteating(int currentX, int currentY, int endX, int endY, Board *board,
                                 return 1;
                         }               
                 }
-	} 
+	}
 		return 0;
 }
 
-}
 int CheckEnPassant(int start_rank,int start_file, Piece p)
 {
 	const char* lastMove = GetLastMove();
@@ -605,8 +604,8 @@ switch (p.type) {
 		    //have to check for both diagonal and straight paths
 		
 		//check for clear straight path
-		 if ( (abs(end_rank - start_rank) == 0) || (abs(end_file - start_file) > 0) ) {
-		 	return checkStraightPathClear(start, end, b);	 
+		 if ( (abs(end_rank - start_rank) == 0) || (abs(end_file - start_file) == 0) ) {
+		 	return checkStraightPathClear(start, end, b);
 		 }
 		 //
 		 else {
@@ -642,21 +641,20 @@ switch (p.type) {
             return 1;
             break;
         }
-	    }
     case 1:
 	    //anteater
 	    {
 		    //can either move one space anywhere or or kill pawns adjecent to itself
 		    //if there are no pawns adjacent to the anteater, it can only move one space in any direction
 
-		    Space *targetSpace = b[end_rank][end_file];
-		    
+		    Space *targetSpace = b->board[end_rank][end_file];
+
 		    int targetColor = -1;
-		
+
 		    if (targetSpace->piece != NULL) {
     			targetColor = targetSpace->piece->color;
 		    }
-		   
+
 		   //checking adjacent spaces
 		    //can only move to adjacent spaces only if the spaces are empty or have an ant
 		    //target 1 space down
@@ -665,7 +663,7 @@ switch (p.type) {
 				return 1;
 			}
 			//is valid if the piece is an ant
-			else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color) {
+			else if ((targetSpace -> piece) -> type == 0 && targetColor != p.color) {
 				return 1;
 			}
 		    }
@@ -675,10 +673,10 @@ switch (p.type) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color) {
+                        else if ((targetSpace -> piece) -> type == 0 && targetColor != p.color) {
                                 return 1;
                         }
-		    
+
 		    }
 		    //target is 1 space right
 		    else if ((start_rank == end_rank) && (end_file - start_file == 1)){
@@ -686,7 +684,7 @@ switch (p.type) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color) {
+                        else if ((targetSpace -> piece) -> type == 0 && targetColor != p.color) {
                                 return 1;
                         }
 
@@ -697,22 +695,16 @@ switch (p.type) {
                                 return 1;
                         }
                         //is valid if the piece is an ant
-                        else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color) {
+                        else if ((targetSpace -> piece) -> type == 0 && targetColor != p.color) {
                                 return 1;
                         }
-		    
+
 		    }
 		    //now consider another case where the target space is not adjacent and instead is occupied by an ant(pawn)
-		    else if ((targetSpace -> piece) -> PieceType == 0 && targetColor != p -> color ) {
+		    else if (targetSpace->piece != NULL && targetSpace->piece->type == 0 && targetColor != p.color) {
 	    	        //will compare the opponent's color to the anteater's color using the variable anteaterColor
-		        int anteaterColor = b[start_rank][start_file] -> piece -> color;
-			
-			for (int x = 0; x < 8; x++) {
-        			for (int y = 0; y < 10; y++) {
-                			stayedAtPositions[x][y] = 0;
-             				}
-			}
-
+		        int anteaterColor = b->board[start_rank][start_file]->piece->color;
+			memset(stayedAtPositions, 0, sizeof(stayedAtPositions));
 			return validAnteating(start_rank, start_file, end_rank, end_file, b, anteaterColor);
 
 		    }
@@ -721,9 +713,9 @@ switch (p.type) {
 		    break;
 	    }
     default:
-        
         break;
 }
+return 0;
 }
 static int FindKing(Board *b, Color color, int *king_rank, int *king_file){
     for (int r = 0; r < 8; r++)
