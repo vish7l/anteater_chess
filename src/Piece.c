@@ -18,9 +18,10 @@ Color getPieceColor(Piece *p){
 }
 
 Piece storePiece(Piece piece){
-	Piece newPiece;
-	newPiece.type = piece.type;
-	newPiece.color = piece.color;
-	return newPiece;
+    Piece newPiece;
+    newPiece.type = piece.type;
+    newPiece.color = piece.color;
+    return newPiece;
 }
+
 

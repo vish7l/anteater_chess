@@ -1,6 +1,5 @@
 #ifndef BOARD_H
 #define BOARD_H
-
 #include "Piece.h"
 #include "Space.h"
 
@@ -9,6 +8,7 @@ typedef struct {
 	Space *board[8][10];
 	int height;
 	int width;
+
 
 } Board;
 
