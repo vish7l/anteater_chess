@@ -21,7 +21,6 @@ Piece storePiece(Piece piece){
 	Piece newPiece;
 	newPiece.type = piece.type;
 	newPiece.color = piece.color;
-	newPiece.moveSet = piece.moveSet;
 	return newPiece;
 }
 
