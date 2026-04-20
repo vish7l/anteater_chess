@@ -1,0 +1,46 @@
+INSTALL 
+
+2.1  System Requirements
+
+To ensure Anteater Chess program will run correctly on your device, the following requirements must be met:
+	
+	- Operating System: Windows, macOS Ventura or later, or Linux
+	- Processor: Intel I3 or equivalent (minimum)
+	- Memory: 4 GB minimum
+	- Storage: At least 200 MB of free disk space
+	- Others: GCC Compiler
+	- Internet: For updates (optional)
+
+2.2  Setup and Configuration
+
+Please refer to these instructions when installing Anteater Chess:
+
+Step 1: Download Program
+
+	Obtain source code
+		- Can be done through Canvas submission files
+
+Step 2: Extract Files 
+	
+	If the program file is compressed, extract it using the following:
+		- gtar xvzf Chess_Alpha_src.tar.gz
+		cd anteater_chess
+
+Step 3: Compile the Program
+	
+	Use the following makefile to generate executable file “AnteaterChess”: 
+		make 
+
+Step 4: Run the Program
+
+	Run the following line to start the program:
+		./bin/chess
+
+Step 5: Follow the Directions on Screen
+
+	To start a game:
+		1. Choose your difficulty level(Easy/Medium/Hard)
+		2. Pick the side you wanna play as(Black/White)
+		3. Select if you want to play vs AI or Human
+		4. Hit Enter to Start
+
