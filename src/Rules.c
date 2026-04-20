@@ -786,7 +786,7 @@ int IsCheck(Board *b, Color color){
     return 0;
 }
 
-int IsCheckamte(Board *b, Color color){
+int IsCheckmate(Board *b, Color color){
     if (!IsCheck(b, color)) return 0;
 
     for (int r = 0; r < BOARD_HEIGHT; r++) {
