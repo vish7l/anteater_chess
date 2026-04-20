@@ -9,9 +9,9 @@
 //check if king in check and if the squares between it and king is attacked by a enemy piece
 int isSquareAttacked(int rank, int file, int attackColor, Board* b)
 {
-	for(int i = 0; i < 7; i++)
+	for(int i = 0; i < 8; i++)
 	{
-		for(int i =0; i < 9; i++)
+		for(int i =0; i < 10; i++)
 		{
 			if(getPieceAt(i, j, b) == NULL)
 			{
@@ -23,27 +23,31 @@ int isSquareAttacked(int rank, int file, int attackColor, Board* b)
 			}
 			else
 			{
-				char start[] = MakeCoordinateMove(i, j);
-				char end[] = MakeCoordinateMove(rank,file);
-				if(illegalMoveCheck(getPieceAt(i,j,b), start[], end[], b) == 0)
+				char* start = MakeCoordinateMove(i, j);
+				char* end = MakeCoordinateMove(rank,file);
+				if(illegalMoveCheck(getPieceAt(i,j,b), start, end, b) == 0)
 				{
-					return 0;
+					free(start);
+					free(end);
+					return 1;
 				}
+				free(start);
+				free(end);
 			}
 		}
 	}
-	return 1;
+	return 0;
 }
 int CheckCastleConditionII(char a, Piece p, Board* b)
 {
 	if(IsCheck(b, getPieceColor(p)))
 	{
-	reutrn 0;
+	return 0;
 	}
 	else
 	{
-		int corrcet_rank;
-		int corrcet_color;
+		int correct_rank;
+		int correct_color;
 		if(getPieceColor(p) == 1)
 		{
 			correct_rank = 7;
@@ -58,7 +62,7 @@ int CheckCastleConditionII(char a, Piece p, Board* b)
 		{
 			case 'a':
 				{
-					if(SpaceIsAttacked(correct_rank, 1,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 2,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 3,correct_color, b) || SpaceIsAttacked(correct_rank, 4,correct_color, b) == 1)
+					if(SpaceIsAttacked(correct_rank, 1,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 2,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 3,correct_color, b)==1 || SpaceIsAttacked(correct_rank, 4,correct_color, b) == 1)
 					{
 						return 0;
 					}	
@@ -66,7 +70,7 @@ int CheckCastleConditionII(char a, Piece p, Board* b)
 				}
 			case 'j':
 				{
-	if(SpaceIsAttacked(correct_rank, 6,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 7,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 8,correct_color, b))
+	if(SpaceIsAttacked(correct_rank, 6,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 7,correct_color, b) == 1 || SpaceIsAttacked(corrcet_rank, 8,correct_color, b) == 1)
 	{
 		return 0;
 	}
@@ -86,7 +90,7 @@ int CheckCastleConditionI(char control, Piece p, Board* b)
 	}
 	else
 	{
-		correct_rank == 0;
+		correct_rank = 0;
 	}
 	if(KingMoved(getPieceColor(p)) == 1)
 	{
@@ -120,7 +124,7 @@ int CheckCastleConditionI(char control, Piece p, Board* b)
 				else
 				{
 					//check if the position between them is empty
-					if(getPieceAt(correct_rank, 6, b) != NULL || getPieceAt(correct_rank, 7, b) != NULL ||  getPieceAt(correct_rank, 8, b) != NULL ||    getPieceAt(correct_rank, 9, b) != NULL)
+					if(getPieceAt(correct_rank, 1, b) != NULL || getPieceAt(correct_rank, 2, b) != NULL ||  getPieceAt(correct_rank, 3, b) != NULL ||    getPieceAt(correct_rank, 4, b) != NULL)
 					{
 						return 0;
 					}
@@ -130,6 +134,7 @@ int CheckCastleConditionI(char control, Piece p, Board* b)
 				break;
 			}
 	}
+	return 0;
 
 }
 
@@ -150,24 +155,24 @@ int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 	else
 	{
 		correct_rank = start_rank + 1;
-		if(correct_rank > 8)
+		if(correct_rank > 7)
 		{
 			return 0;
 		}
 	}
-	if(lcorrect_file < 0)
+	if(l_correct_file < 0)
 	{
 		return 0;
 	}
-	if(rcorrect_file > 9)
+	if(r_correct_file > 9)
 	{
 		return 0;
 	}
-	if(getPieceAt(correct_rank, lcorrect_file, b) != NULL)
+	if(getPieceAt(correct_rank, lcorrect_file, b) != NULL && getPieceColor(getPieceAt(correct_rank, l_correct_file, b) ) != getPieceColor(p))
 	{
 		return 1;
 	}
-	else if(getPieceAt(correct_rank, rcorrect_file, b) != NULL)
+	else if(getPieceAt(correct_rank, rcorrect_file, b) != NULL && getPieceColor(getPieceAt(correct_rank, r_correct_file, b)) != getPieceColor(p)  )
 	{
 		return 1;
 	}	
@@ -175,7 +180,7 @@ int checkifCapture(Piece p, int start_rank, int start_file, Board* b)
 	{
 		return 0;
 	}
-
+}
 //will be used for checking if the straight path of the rook or queen is clear
 int checkStraightPathClear(char start[], char end[], Board *board) {
 	 // the starting index is at the top left corner of the chess board
@@ -254,16 +259,17 @@ int checkDiagonalPathClear(char start[], char end[], Board *board) {
 	 // the starting index is at the top left corner of the chess board
         // convert the start and end character arrats to mathematical 2d array coordinates
         int start_file = start[0] - 'A';
-        int start_rank = 7 - (start[1] - '1');
+        int start_rank = '8' - start[1];
         int end_file = end[0] - 'A';
-        int end_rank = 7 - (end[1] - '1');
-	int file_direction = (end_file - start_file)/abs(end_file - start_file);
-	int rank_direction = (end_rank - start_rank)/abs(end_rank-start_rank);
+        int end_rank = '8' - end[1];
+
 	
 	if(abs(end_rank - start_rank) != abs(end_file-start_file))
 	{
 		return 0;
 	}
+	int file_direction = (end_file - start_file)/abs(end_file - start_file);
+	int rank_direction = (end_rank - start_rank)/abs(end_rank-start_rank);
 
 	while(start_rank != end_rank || start_file != end_file)
 	{
@@ -365,24 +371,24 @@ int validAnteating(int currentX, int currentY, int endX, int endY, Board *board,
 }
 int CheckEnPassant(int start_rank, Piece p)
 {
-	char lastMove[] = GetLastMove();
-	int lMove_file = LastMove[1] - 'A';
-	int lMove_rank = 7 - (LastMove[2] - '1');
+	char* lastMove = GetLastMove();
+	int lMove_file = LastMove[0] - 'A';
+	int lMove_rank = '8' - LastMove[1];
 	int correct_rank;
 	if(getPieceColor(p) == 1)
 	{
-		correct_rank = 4;
+		correct_rank = 3;
 
 	}
 	else
 	{
-		correct_rank = 5;
+		correct_rank = 4;
 	}
 	if(start_rank != correct_rank)
 	{
 		return 0;
 	}
-	if(lastMove[0] != 'p')
+	if(lastMove[2] != 'p')
 	{
 		return 0;
 	}
