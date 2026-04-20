@@ -825,7 +825,115 @@ int IsCheckamte(Board *b, PieceColor color){
     return 1;
 }
 
-int IsDraw(Board *b, PieceColor color){
+int IsStalemate(Board *b, PieceColor color) {
+    /* Stalemate = NOT in check AND no legal moves exist */
+    if (IsCheck(b, color)) return 0;
 
+    for (int r = 0; r < BOARD_HEIGHT; r++) {
+        for (int c = 0; c < BOARD_WIDTH; c++) {
+            Piece *p = b->board[r][c]->piece;
+            if (p == NULL) continue;
+            if (getPieceColor(p) != color) continue;
+
+            char from[3];
+            from[0] = 'A' + c;
+            from[1] = '1' + r;
+            from[2] = '\0';
+
+            for (int tr = 0; tr < BOARD_HEIGHT; tr++) {
+                for (int tc = 0; tc < BOARD_WIDTH; tc++) {
+                    char to[3];
+                    to[0] = 'A' + tc;
+                    to[1] = '1' + tr;
+                    to[2] = '\0';
+
+                    if (!IllegalMoveCheck(*p, from, to, b)) continue;
+
+                    /* Temporarily make the move */
+                    Piece *captured      = b->board[tr][tc]->piece;
+                    b->board[tr][tc]->piece = p;
+                    b->board[r][c]->piece   = NULL;
+
+                    int stillInCheck = IsCheck(b, color);
+
+                    /* Undo the move */
+                    b->board[r][c]->piece   = p;
+                    b->board[tr][tc]->piece = captured;
+
+                    if (!stillInCheck) return 0; /* legal move exists, not stalemate */
+                }
+            }
+        }
+    }
+    return 1; /* no legal move and not in check = stalemate */
+}
+
+int IsDraw(Board *b) {
+    int whiteBishops   = 0, blackBishops   = 0;
+    int whiteKnights   = 0, blackKnights   = 0;
+    int whiteAnteaters = 0, blackAnteaters = 0;
+    int whiteOther     = 0, blackOther     = 0;
+    int whiteBishopSquare = -1, blackBishopSquare = -1;
+
+    for (int r = 0; r < BOARD_HEIGHT; r++) {
+        for (int c = 0; c < BOARD_WIDTH; c++) {
+            Piece *p = b->board[r][c]->piece;
+            if (p == NULL) continue;
+
+            PieceType t = getPieceType(p);
+            Color     col = getPieceColor(p);
+
+            if (t == KING) continue;
+
+            switch (t) {
+                case BISHOP:
+                    if (col == White) { whiteBishops++; whiteBishopSquare = (r + c) % 2; }
+                    else              { blackBishops++; blackBishopSquare = (r + c) % 2; }
+                    break;
+                case KNIGHT:
+                    if (col == White) whiteKnights++;
+                    else              blackKnights++;
+                    break;
+                case ANTEATER:
+                    /* Anteater can only kill pawns, cannot force checkmate alone */
+                    if (col == White) whiteAnteaters++;
+                    else              blackAnteaters++;
+                    break;
+                default:
+                    /* PAWN, ROOK, QUEEN still on board = not a draw */
+                    if (col == White) whiteOther++;
+                    else              blackOther++;
+                    break;
+            }
+        }
+    }
+
+    if (whiteOther > 0 || blackOther > 0) return 0;
+    /* If any pawns, rooks, or queens are still on the board, there is enough material to force checkmate, so we can stop here and return not a draw. */
+
+    int whitePieces = whiteBishops + whiteKnights + whiteAnteaters;
+    int blackPieces = blackBishops + blackKnights + blackAnteaters;
+
+    /* King vs King */
+    if (whitePieces == 0 && blackPieces == 0) return 1;
+
+    /* King + knight vs King  or  King vs King + Knight */
+    if ((whitePieces == 1 && whiteKnights == 1 && blackPieces == 0) ||
+        (blackPieces == 1 && blackKnights == 1 && whitePieces == 0)) return 1;
+
+    /* King + Bishop vs King  or  King vs King + Bishop */
+    if ((whitePieces == 1 && whiteBishops == 1 && blackPieces == 0) ||
+        (blackPieces == 1 && blackBishops == 1 && whitePieces == 0)) return 1;
+
+    /* K + Aanteater vs King  or  King vs King + Anteater */
+    if ((whitePieces == 1 && whiteAnteaters == 1 && blackPieces == 0) ||
+        (blackPieces == 1 && blackAnteaters == 1 && whitePieces == 0)) return 1;
+
+    /* King + Bishop vs King + Bishop same square color */
+    if (whitePieces == 1 && whiteBishops == 1 &&
+        blackPieces == 1 && blackBishops == 1 &&
+        whiteBishopSquare == blackBishopSquare) return 1;
+
+    return 0;
 }
 
