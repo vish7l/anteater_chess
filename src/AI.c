@@ -14,17 +14,19 @@ char *CalculateMove(Board *b, Color aiColor){
     char *myCoords[80];
     int count = 0;
 
+    char pos[5];
+
     //to put the ai pieces into the array
     for(int r = 0; r < 8; r++){
         for(int f = 0; f < 10; f++){
             // change the array index into chess type string
-            sprintf(pos, "%c%d" 'A' + f, r + 1);
+            sprintf(pos, "%c%d", 'A' + f, r + 1);
 
-            Space *s = b->Board[r][f]; 
+            Space *s = b->board[r][f]; 
             if(s -> piece != NULL && getPieceColor(s -> piece) == aiColor){
                 char *pos = malloc(3);
 
-                sprintf(pos, "%c%d" 'A' + f, r + 1);
+                sprintf(pos, "%c%d", 'A' + f, r + 1);
 
                 myPieces[count] = s;
                 myCoords[count] = pos;
@@ -42,7 +44,7 @@ char *CalculateMove(Board *b, Color aiColor){
     while(!moveFound && count > 0 && attempts < 500){
         //attempts is here in case a piece is chosen that isn't able to move
         attempts ++;
-        int idx = rand() % count
+        int idx = rand() % count;
         Piece *p = myPieces[idx]->piece;
         char *startPos = myCoords[idx];
 
